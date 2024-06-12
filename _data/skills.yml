@@ -15,8 +15,7 @@ libraries:
   - item: Seaborn
   - item: Plotly
   - item: Matplotlib
-  - item: Keras
-  - item: TensorFlow
+  - item: Keras/Tensorflow
   - item: Scikit Learn
   - item: PySpark
   - item: PyTorch
@@ -28,7 +27,7 @@ developer_tools:
   - item: Snowflake
   - item: Spark
   - item: Hadoop
-  - item: Github
+  - item: Git/Github
   - item: Docker
   - item: Google Cloud Platform
   - item: Visual Studio
@@ -38,9 +37,9 @@ developer_tools:
 business_intelligence:
   - item: Tableau
   - item: Power BI
-  - item: Excel
+  - item: Microsoft Excel
   - item: PowerPoint
-  - item: Salesforce Analytics
+  - item: Salesforce CRM Analytics
   - item: Adobe Analytics
   - item: Power Automate
 
