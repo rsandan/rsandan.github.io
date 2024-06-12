@@ -1,33 +1,46 @@
 languages:
-  - item: JavaScript (ES6)
-  - item: TypeScript
-  - item: HTML
-  - item: CSS/Sass
   - item: Python
   - item: SQL
   - item: R
+  - item: Java
+  - item: C++
+  - item: HTML
+  - item: Javascript
+  - item: CSS/Sass
 
-frameworks:
-  - item: Ember & Glimmer
-  - item: React
-  - item: Jekyll
-  - item: Node
-  - item: D3
-  - item: Wordpress
-  - item: Timber
 
-tools:
-  - item: Bash
-  - item: Git & Github
-  - item: Gulp & Grunt
-  - item: Chrome DevTools
-  - item: Postman
-  - item: MongoDB
+libraries:
+  - item: Pandas
+  - item: NumPy
+  - item: Seaborn
+  - item: Plotly
+  - item: Matplotlib
+  - item: Keras
+  - item: TensorFlow
+  - item: Scikit Learn
+  - item: PySpark
+  - item: PyTorch
+  - item: XGBoost
 
-design:
-  - item: Sketch
-  - item: InDesign
-  - item: InVision
-  - item: Prototyping
-  - item: Wireframing
-  - item: User Testing
+
+developer tools:
+  - item: DataBricks
+  - item: Snowflake
+  - item: Spark
+  - item: Hadoop
+  - item: Github
+  - item: Docker
+  - item: Google Cloud Platform
+  - item: Visual Studio
+  - item: Airflow
+
+
+business intelligence:
+  - item: Tableau
+  - item: Power BI
+  - item: Excel
+  - item: PowerPoint
+  - item: Salesforce Analytics
+  - item: Adobe Analytics
+  - item: Power Automate
+
