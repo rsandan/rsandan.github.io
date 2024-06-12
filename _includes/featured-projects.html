@@ -1,18 +1,26 @@
 <section class="section featured-projects">
   <div class="section__title">Featured Projects</div>
   <div class="section__content">
-    <div class="project blistabloc">
+    <div class="project">
       <figure class="project__pic">
         <a href="https://github.com/rsandan/nba_clustering" target="_blank">
-          <img src="{{site.baseurl}}/img/featured/nba_clustering/output.png" alt="">
+          <img src="{{site.baseurl}}/img/featured/nba_clustering/output.png" alt="Image description">
         </a>
       </figure>
       <figcaption class="project__caption">
         <div class="project__name">
-          next man up
+          Next Man Up
         </div>
         <p>Implemented clustering model to group NBA, G League, and NCAA players based on box score statistics enabling: potential role player replacements, 
           scouting emerging talent, and contingency planning for injuries or trades.</p>
       </figcaption>
     </div>
+  </div>
 </section>
+
+.project__pic img {
+  max-width: 80%; /* 20% smaller than the original size */
+  height: auto;
+}
+
+
