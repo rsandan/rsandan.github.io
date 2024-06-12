@@ -23,7 +23,7 @@ libraries:
   - item: XGBoost
 
 
-developer tools:
+developer_tools:
   - item: DataBricks
   - item: Snowflake
   - item: Spark
@@ -35,7 +35,7 @@ developer tools:
   - item: Airflow
 
 
-business intelligence:
+business_intelligence:
   - item: Tableau
   - item: Power BI
   - item: Excel
