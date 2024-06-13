@@ -12,6 +12,7 @@
     - thing: Excel
     - thing: GoogleV3
     - thing: Jupyter Notebook
+    - thing: Spotify API
     
 - name: Social Determinants of Health
   url: https://github.com/rsandan/
