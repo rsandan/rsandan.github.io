@@ -1,10 +1,14 @@
-- name: Surf Videos
-  url: https://github.com/bchiang7/Surf-Videos
-  code: https://github.com/bchiang7/Surf-Videos
-  description: Small React project created during an interview process to browse and search surf videos via the YouTube API.
+- name: Social Determinants of Health
+  url: https://github.com/rsandan
+  code: https://github.com/rsandan/
+  description: Volunteered to develop HIPAA-compliant interactive map tracking high-risk community needs across the Triad region in North Carolina for Atrium Health, logged by Community Health Workers to optimize resource allocation.
   used:
-    - thing: JavaScript
-    - thing: React
-    - thing: React Router
-    - thing: Axios
-    - thing: YouTube API
+    - thing: Python
+    - thing: NumPy
+    - thing: GeoPandas
+    - thing: Seaborn
+    - thing: Folium
+    - thing: Matplotlib
+    - thing: Excel
+    - thing: GoogleV3
+    - thing: Jupyter Notebook
