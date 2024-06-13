@@ -3,6 +3,7 @@
   code: https://github.com/rsandan/
   description: Volunteered to develop HIPAA-compliant interactive map tracking high-risk community needs across the Triad region in North Carolina for Atrium Health, logged by Community Health Workers to optimize resource allocation.
   used:
+    - thing: Healthcare Analytics
     - thing: Python
     - thing: NumPy
     - thing: GeoPandas
@@ -16,7 +17,7 @@
 - name: Song Recommendation System based on Spotify Audio Metrics
   url: https://github.com/rsandan/
   code: https://github.com/rsandan/
-  description: "Final project for DATA144: Data Mining and Analytics. Provided a personalized and engaging music discovery experience for Spotify users by recommending relevant songs aligned with their tastes. Implemented K-Means clustering, Elbow method, Silhouette score, and Euclidean distance function to optimally group songs into k = 5 distinct clusters based on Spotify API audio features"
+  description: "Provided a personalized and engaging music discovery experience for Spotify users by recommending relevant songs aligned with their tastes. Implemented K-Means clustering, Elbow method, Silhouette score, and Euclidean distance function to optimally group songs into k = 5 distinct clusters based on Spotify API audio features"
   used:
     - thing: Python
     - thing: NumPy
@@ -34,6 +35,7 @@
   code: https://github.com/rsandan/
   description: "Performed exploratory data analysis on tweets from several high-public figures scraped from Twitter API. Findings include: top 10 most frequent hashtags and user mentions, distribution of tweets by time of day, and sentiment polarity scores." 
   used:
+    - thing: Sentiment Analysis
     - thing: Python
     - thing: NumPy
     - thing: Pandas
