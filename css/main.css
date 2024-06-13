@@ -819,6 +819,17 @@ strong{
     flex-shrink:0;
     margin-left:30px
 }
+
+.featured-projects .project__caption ul{
+  list-style-type: disc; /* Use 'disc', 'circle', 'square', etc. for different bullet styles */
+  margin-left: 20px; /* Adjust as needed */
+  padding-left: 0; /* Remove default padding */
+}
+
+.featured-projects .project__caption li{
+  margin-bottom: 5px; /* Adjust spacing between bullets */
+}
+
 @media screen and (max-width:768px){
     .featured-projects .project__caption{
         width:100%;
