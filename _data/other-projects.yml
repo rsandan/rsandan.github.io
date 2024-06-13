@@ -1,8 +1,7 @@
 - name: Social Determinants of Health
   url: https://github.com/rsandan
   code: https://github.com/rsandan
-  description: Volunteered to develop HIPAA-compliant interactive map tracking high-risk community needs across the triad region in North Carolina for Atrium Health, logged by Community Health Workers to
-  optimize resource allocation.
+  description: Volunteered to develop HIPAA-compliant interactive map tracking high-risk community needs across the triad region in North Carolina for Atrium Health, logged by Community Health Workers to optimize resource allocation.
   used:
    - thing: Python
    - thing: NumPy
@@ -15,7 +14,7 @@
    - thing: Jupyter Notebook
 
 
-  - name: Tweet Analysis
+- name: Tweet Analysis
   url: https://github.com/rsandan
   code: https://github.com/rsandan
   description: Performed Exploratory Data Analysis on tweets from several high profile public figures scraped from Twitter API. Findings include: top 10 most frequent hashtags and mentions, distribution of tweets by time of day,
