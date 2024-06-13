@@ -43,3 +43,14 @@
     - thing: Regular Expressions
     - thing: Matplotlib
     - thing: Jupyter Notebook
+
+- name: Personal Website
+  url: https://sssandan.github.io/
+  code: https://sssandan.github.io/
+  description: "My first personal website that I worked on during community college." 
+  used:
+    - thing: Git/GitHub
+    - thing: Jekyll
+    - thing: HTML
+    - thing: CSS
+    - thing: Javascript
