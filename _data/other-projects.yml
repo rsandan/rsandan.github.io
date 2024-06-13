@@ -1,9 +1,31 @@
-- name: TBA
+- name: Social Determinants of Health
   url: https://github.com/rsandan
   code: https://github.com/rsandan
-  description: Enter Project Description here.
+  description: Volunteered to develop HIPAA-compliant interactive map tracking high-risk community needs across the triad region in North Carolina for Atrium Health, logged by Community Health Workers to
+  optimize resource allocation.
   used:
-    - thing: Enter
-    - thing: Technologies
-    - thing: Utilized
-    - thing: Here
+   - thing: Python
+   - thing: NumPy
+   - thing: GeoPandas
+   - thing: Seaborn
+   - thing: Folium
+   - thing: Matplotlib
+   - thing: Microsoft Excel
+   - thing: GoogleV3
+   - thing: Jupyter Notebook
+
+
+  - name: Tweet Analysis
+  url: https://github.com/rsandan
+  code: https://github.com/rsandan
+  description: Performed Exploratory Data Analysis on tweets from several high profile public figures scraped from Twitter API. Findings include: top 10 most frequent hashtags and mentions, distribution of tweets by time of day,
+  and sentiment polarity scores from tweets
+  used:
+  - thing: Python
+  - thing: NumPy
+  - thing: Pandas
+  - thing: Seaborn
+  - thing: Matplotlib
+  - thing: Regular expressions
+  - thing: Jupyter Notebook
+
