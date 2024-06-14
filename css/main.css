@@ -837,7 +837,7 @@ strong{
 
 .featured-projects .project ul {
     list-style-type: disc;
-    padding-left: -1rem;
+    margin-left: 1rem;
 }
 
 .featured-projects .project ul li {
