@@ -115,11 +115,13 @@ a{
 
 ul{
     list-style-type:disc;
-    margin-left: 2px;
 }
 
 li{
-  margin-bottom: 5px; 
+  margin-bottom: 5px;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
 }
 
 svg{
