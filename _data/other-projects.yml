@@ -31,7 +31,7 @@
     - thing: tqdm
 
 - name: Tweet Analysis
-  url: https://github.com/rsandan
+  url: https://github.com/sssandan/tweet_analysis
   code: https://github.com/rsandan/
   description: "Performed exploratory data analysis on tweets from several high-public figures scraped from Twitter API. Findings include: top 10 most frequent hashtags and user mentions, distribution of tweets by time of day, and sentiment polarity scores." 
   used:
