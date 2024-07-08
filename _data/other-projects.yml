@@ -15,8 +15,8 @@
     - thing: Jupyter Notebook
 
 - name: Song Recommendation System based on Spotify Audio Metrics
-  url: https://github.com/rsandan/
-  code: https://github.com/rsandan/
+  url: https://rsandan.github.io/data144
+  code: https://github.com/rsandan/spotifyrecommendation
   description: "Provided a personalized and engaging music discovery experience for Spotify users by recommending relevant songs aligned with their tastes. Implemented K-Means clustering, Elbow method, Silhouette score, and Euclidean distance function to optimally group songs into k = 5 distinct clusters based on Spotify API audio features"
   used:
     - thing: Python
