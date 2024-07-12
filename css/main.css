@@ -568,6 +568,10 @@ strong{
 .intro__tagline .basketball{
     background-image:url(../img/emojis/basketball.png)
 }
+
+.intro__tagline .reezy{
+    background-image:url(../img/emojis/reezy.png)
+}
 .intro__contact{
     font-size:1.25rem;
     font-weight:400
