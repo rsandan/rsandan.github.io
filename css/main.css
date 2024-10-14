@@ -572,6 +572,10 @@ strong{
 .intro__tagline .ryanlogo{
     background-image:url(../img/emojis/ryanlogo.png)
 }
+
+.intro__tagline .bear{
+    background-image:url(../img/emojis/bear.png)
+}
 .intro__contact{
     font-size:1.25rem;
     font-weight:400
