@@ -5,403 +5,531 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Hoops Data Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@400&display=swap">
 <style>
 html{color-scheme:light}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}
-/* Layout: one narrow scouting-notebook column; ask at top, lesson cards flow below like a film-room session */
+/* Layout: arena-style hero band with the ask box, then a single answer card (headline, takeaway, leaderboard/chart) and tucked-away "how it works" + "your turn" tabs */
 :root{
-  --bg:#F3F5F8; --paper:#FFFFFF; --ink:#14213A; --muted:#5A667D; --line:#D9DFE8;
-  --court:#1F4B99; --leather:#D9741E; --leather-soft:#FBEBDC; --court-soft:#E4ECF8;
-  --good:#1E7A4C; --bad:#B3261E; --code-bg:#0F1A2E; --code-fg:#DCE6F5;
+  --bg:#EEF1F6; --card:#FFFFFF; --ink:#101A2E; --muted:#5B6780; --line:#DDE3EC; --soft:#F5F7FA;
+  --hero:#0E2247; --hero-ink:#FFFFFF; --hero-muted:#AFC0DE;
+  --accent:#F07A1A; --accent-ink:#1E0F02; --court:#2457C5;
+  --hi:#2457C5; --hi-bg:#DCE7FB; --lo:#D2493A; --lo-bg:#FBE1DD; --mid-bg:#EEF1F6;
+  --code-bg:#0B162B; --code-fg:#DCE6F5;
   --display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
-  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --cond:"Barlow Condensed","Arial Narrow",sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0C1220; --paper:#141C2E; --ink:#E6ECF6; --muted:#97A3B9; --line:#26314A;
-  --court:#7EA6F0; --leather:#F0954A; --leather-soft:#3A2614; --court-soft:#1A2744;
-  --good:#5CC48F; --bad:#F2867E; --code-bg:#080D18; --code-fg:#DCE6F5; color-scheme:dark}}
+  --bg:#080E1A; --card:#111A2B; --ink:#E8EEF8; --muted:#93A1BA; --line:#223050; --soft:#172238;
+  --hero:#0A1A38; --hero-ink:#FFFFFF; --hero-muted:#9FB2D6;
+  --accent:#FF8E33; --accent-ink:#1E0F02; --court:#7DA4F5;
+  --hi:#8FB3FF; --hi-bg:#1B2E57; --lo:#FF8F82; --lo-bg:#4A1F1C; --mid-bg:#1A2438;
+  --code-bg:#060B15; --code-fg:#DCE6F5; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#0C1220; --paper:#141C2E; --ink:#E6ECF6; --muted:#97A3B9; --line:#26314A;
-  --court:#7EA6F0; --leather:#F0954A; --leather-soft:#3A2614; --court-soft:#1A2744;
-  --good:#5CC48F; --bad:#F2867E; --code-bg:#080D18; --code-fg:#DCE6F5; color-scheme:dark}
+  --bg:#080E1A; --card:#111A2B; --ink:#E8EEF8; --muted:#93A1BA; --line:#223050; --soft:#172238;
+  --hero:#0A1A38; --hero-ink:#FFFFFF; --hero-muted:#9FB2D6;
+  --accent:#FF8E33; --accent-ink:#1E0F02; --court:#7DA4F5;
+  --hi:#8FB3FF; --hi-bg:#1B2E57; --lo:#FF8F82; --lo-bg:#4A1F1C; --mid-bg:#1A2438;
+  --code-bg:#060B15; --code-fg:#DCE6F5; color-scheme:dark}
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--body);
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
-.wrap{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
-header{display:flex;flex-direction:column;gap:4px}
-.eyebrow{font:500 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--leather)}
-h1{font:800 44px/0.95 var(--display);letter-spacing:.01em;margin:0;text-transform:uppercase;text-wrap:balance}
-h1 span{color:var(--court)}
-.sub{color:var(--muted);margin:4px 0 0;max-width:60ch}
-.status{font:12px/1.4 var(--mono);color:var(--muted)}
-.status b{color:var(--ink);font-weight:500}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 var(--body);padding-bottom:40px}
+.gutter{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.inner{max-width:760px;margin:0 auto}
 
-.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
-.ask textarea{width:100%;min-height:84px;resize:vertical;border:1px solid var(--line);border-radius:10px;padding:12px;font:15px/1.45 var(--body);background:var(--bg);color:var(--ink)}
-.ask textarea:focus,.sql:focus{outline:2px solid var(--court);outline-offset:1px}
-.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
-.chip{flex:none;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:7px 12px;font:500 13px/1 var(--body);cursor:pointer}
-.chip:hover{border-color:var(--court)}
-.seg{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
-.seg button{border:0;background:transparent;color:var(--muted);padding:7px 11px;font:500 12px/1 var(--body);cursor:pointer}
-.seg button[aria-pressed="true"]{background:var(--court);color:#fff}
-.btn{border:0;border-radius:10px;padding:11px 16px;font:600 14px/1 var(--body);cursor:pointer;background:var(--leather);color:#1A0E03}
-.btn.ghost{background:transparent;color:var(--court);border:1px solid var(--line)}
-.btn.small{padding:8px 12px;font-size:13px}
-.btn:disabled{opacity:.5;cursor:default}
-.btn:focus-visible,.chip:focus-visible,.seg button:focus-visible,summary:focus-visible{outline:2px solid var(--court);outline-offset:2px}
-.grow{flex:1}
-.label{font:500 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+/* ---------- hero ---------- */
+.hero{background:var(--hero);color:var(--hero-ink);position:relative;overflow:hidden;padding-block:28px 26px}
+.hero svg.court{position:absolute;right:-60px;top:-30px;width:340px;height:340px;opacity:.13;pointer-events:none}
+.hero .inner{position:relative;display:flex;flex-direction:column;gap:14px}
+.kicker{font:600 13px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+h1{font:900 clamp(44px,12vw,72px)/.88 var(--display);margin:0;text-transform:uppercase;letter-spacing:.005em}
+h1 em{font-style:normal;color:var(--accent)}
+.tag{margin:0;color:var(--hero-muted);font-size:17px;max-width:44ch}
+.askbox{display:flex;gap:8px;background:#FFFFFF;border-radius:14px;padding:6px;box-shadow:0 8px 28px rgba(0,0,0,.25)}
+.askbox input{flex:1;min-width:0;border:0;background:transparent;font:500 16px var(--body);color:#101A2E;padding:10px 10px}
+.askbox input::placeholder{color:#7A869C}
+.askbox input:focus{outline:none}
+.askbox:focus-within{box-shadow:0 0 0 3px var(--accent),0 8px 28px rgba(0,0,0,.25)}
+.go{border:0;border-radius:10px;background:var(--accent);color:var(--accent-ink);font:700 16px var(--cond);letter-spacing:.06em;text-transform:uppercase;padding:0 18px;cursor:pointer}
+.go:disabled{opacity:.55;cursor:default}
+.mode{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font:500 14px var(--body);color:var(--hero-muted)}
+.seg{display:flex;background:rgba(255,255,255,.08);border-radius:999px;padding:3px}
+.seg button{border:0;background:transparent;color:var(--hero-muted);padding:6px 12px;border-radius:999px;font:600 14px var(--cond);letter-spacing:.04em;cursor:pointer}
+.seg button[aria-pressed="true"]{background:#FFFFFF;color:#0E2247}
+.status{font:500 13px var(--cond);letter-spacing:.06em;text-transform:uppercase;color:var(--hero-muted)}
+.status b{color:#fff;font-weight:700}
 
-.lesson-head{display:flex;flex-direction:column;gap:6px}
-.lesson-head h2{font:800 28px/1 var(--display);text-transform:uppercase;margin:0;text-wrap:balance}
-.skill{align-self:flex-start;background:var(--court-soft);color:var(--court);border-radius:6px;padding:4px 8px;font:500 12px/1.2 var(--mono)}
-.prose{margin:0;max-width:65ch}
-.prose code,.challenge code{font:13px var(--mono);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:0 4px}
-.sql{width:100%;min-height:140px;border:0;border-radius:10px;padding:12px;background:var(--code-bg);color:var(--code-fg);font:13px/1.55 var(--mono);resize:vertical;white-space:pre;overflow:auto;tab-size:2}
-pre.py{margin:0;background:var(--code-bg);color:var(--code-fg);border-radius:10px;padding:12px;font:13px/1.55 var(--mono);overflow-x:auto}
-.err{color:var(--bad);font:13px/1.45 var(--mono);white-space:pre-wrap}
-.meta{font:12px var(--mono);color:var(--muted)}
-.tablewrap{overflow:auto;max-height:340px;border:1px solid var(--line);border-radius:10px}
-table{border-collapse:collapse;font:13px/1.3 var(--body);font-variant-numeric:tabular-nums;width:max-content;min-width:100%}
-th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
-th{position:sticky;top:0;background:var(--paper);font:500 11px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
-td.num{text-align:right}
-.chartbox{position:relative;height:260px;max-width:100%}
-details{border-top:1px solid var(--line);padding-top:10px}
-summary{cursor:pointer;font-weight:600;color:var(--court);list-style:none}
-summary::-webkit-details-marker{display:none}
-summary::before{content:"+ ";font-family:var(--mono)}
-details[open] summary::before{content:"− "}
-details>*:not(summary){margin-top:10px}
-.challenge{background:var(--leather-soft);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
-.challenge p{margin:0}
-.answer{white-space:pre-wrap;margin:0;max-width:65ch}
+/* ---------- question cards ---------- */
+.picks{padding-block:18px 4px}
+.picks h3,.sec-title{font:700 14px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.rail{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.qcard{flex:none;width:210px;scroll-snap-align:start;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;cursor:pointer;color:var(--ink);font:inherit;transition:transform .15s,border-color .15s}
+.qcard:hover{transform:translateY(-2px);border-color:var(--court)}
+.qcard .cat{font:700 12px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase}
+.qcard .qq{font:600 16px/1.3 var(--body)}
+
+/* ---------- answer card ---------- */
+main{padding-top:16px}
+.answer{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.a-head{padding:20px 18px 6px;display:flex;flex-direction:column;gap:8px}
+.pill{align-self:flex-start;font:700 12px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;padding:6px 10px;border-radius:999px;background:var(--hi-bg);color:var(--hi)}
+.a-head h2{font:800 clamp(30px,8vw,42px)/.95 var(--display);text-transform:uppercase;margin:0;text-wrap:balance}
+.asked{font:500 14px var(--body);color:var(--muted)}
+.takeaway{margin:6px 18px 4px;padding:14px 16px;border-radius:12px;background:var(--soft);font:500 17px/1.5 var(--body);max-width:68ch;border-left:4px solid var(--accent)}
+.takeaway .lbl{display:block;font:700 12px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
 .thinking{color:var(--muted);font-style:italic}
-.history{display:flex;flex-direction:column;gap:4px}
-.history button{text-align:left;border:0;background:none;color:var(--court);padding:6px 0;font:14px var(--body);cursor:pointer;border-bottom:1px solid var(--line)}
-.note{font-size:13px;color:var(--muted);margin:0}
+.viz{padding:14px 18px 18px;display:flex;flex-direction:column;gap:10px}
+.chartbox{position:relative;height:280px;max-width:100%}
+
+/* leaderboard */
+.lb{display:flex;flex-direction:column}
+.lb-row{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px 2px;border-bottom:1px solid var(--line)}
+.lb-row:last-child{border-bottom:0}
+.rank{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font:700 15px var(--cond);background:var(--soft);color:var(--muted)}
+.lb-row:nth-child(1) .rank{background:var(--accent);color:var(--accent-ink)}
+.lb-row:nth-child(2) .rank,.lb-row:nth-child(3) .rank{background:var(--hi-bg);color:var(--hi)}
+.who{min-width:0;display:flex;flex-direction:column;gap:5px}
+.name{font:700 17px/1.15 var(--body);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sub{font:500 13px var(--body);color:var(--muted)}
+.bar{height:6px;border-radius:3px;background:var(--soft);overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--court),var(--accent));border-radius:3px}
+.chips{display:flex;gap:5px;flex-wrap:wrap}
+.chip{font:600 12px/1 var(--cond);letter-spacing:.03em;padding:4px 7px;border-radius:6px;background:var(--mid-bg);color:var(--ink);font-variant-numeric:tabular-nums}
+.chip b{font-weight:500;color:var(--muted);margin-right:3px}
+.chip.hi{background:var(--hi-bg);color:var(--hi)} .chip.lo{background:var(--lo-bg);color:var(--lo)}
+.big{text-align:right;display:flex;flex-direction:column;align-items:flex-end}
+.big strong{font:800 30px/1 var(--display);font-variant-numeric:tabular-nums}
+.big span{font:600 12px var(--cond);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.more{align-self:center;border:1px solid var(--line);background:transparent;color:var(--court);border-radius:999px;padding:8px 16px;font:600 14px var(--cond);letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.legend{display:flex;gap:10px;align-items:center;font:500 12px var(--body);color:var(--muted);flex-wrap:wrap}
+.legend .chip{font-size:11px}
+
+/* table fallback */
+.tablewrap{overflow:auto;max-height:380px;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;font:14px/1.3 var(--body);font-variant-numeric:tabular-nums;width:max-content;min-width:100%}
+th,td{padding:8px 11px;border-bottom:1px solid var(--line);white-space:nowrap;text-align:left}
+th{position:sticky;top:0;background:var(--card);font:700 12px var(--cond);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+td.num{text-align:right} td.hi{background:var(--hi-bg);color:var(--hi)} td.lo{background:var(--lo-bg);color:var(--lo)}
+
+/* tabs */
+.tabs{display:flex;border-top:1px solid var(--line);background:var(--soft)}
+.tabs button{flex:1;border:0;background:transparent;color:var(--muted);padding:14px 8px;font:700 15px var(--cond);letter-spacing:.06em;text-transform:uppercase;cursor:pointer;border-bottom:3px solid transparent}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);background:var(--card)}
+.tabpanel{padding:16px 18px 20px;display:flex;flex-direction:column;gap:12px}
+.prose{margin:0;max-width:66ch}
+.step{display:flex;gap:10px;align-items:flex-start}
+.step .n{flex:none;width:24px;height:24px;border-radius:50%;background:var(--hi-bg);color:var(--hi);display:grid;place-items:center;font:700 13px var(--cond)}
+.codehead{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.sql{width:100%;min-height:150px;border:0;border-radius:12px;padding:12px;background:var(--code-bg);color:var(--code-fg);font:13px/1.55 var(--mono);resize:vertical;white-space:pre;overflow:auto;tab-size:2}
+pre.py{margin:0;background:var(--code-bg);color:var(--code-fg);border-radius:12px;padding:12px;font:13px/1.55 var(--mono);overflow-x:auto}
+.btn{border:0;border-radius:10px;padding:10px 16px;font:700 15px var(--cond);letter-spacing:.06em;text-transform:uppercase;cursor:pointer;background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent;color:var(--court);border:1px solid var(--line)}
+.btn:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.meta{font:500 13px var(--body);color:var(--muted)}
+.err{color:var(--lo);font:14px/1.45 var(--body);white-space:pre-wrap;margin:0}
+.challenge{background:var(--soft);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.challenge .lbl{font:700 12px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.challenge p{margin:0;font-weight:600;font-size:17px}
+.coach{margin:0;white-space:pre-wrap;max-width:66ch}
+details summary{cursor:pointer;color:var(--court);font:700 15px var(--cond);letter-spacing:.06em;text-transform:uppercase;list-style:none}
+details summary::-webkit-details-marker{display:none}
+details[open] summary{margin-bottom:10px}
+
+.history{display:flex;flex-direction:column}
+.history button{display:flex;justify-content:space-between;gap:12px;text-align:left;border:0;border-bottom:1px solid var(--line);background:none;color:var(--ink);padding:12px 2px;font:600 15px var(--body);cursor:pointer}
+.history button span{color:var(--muted);font:600 12px var(--cond);letter-spacing:.08em;text-transform:uppercase;flex:none}
+.foot{font-size:13px;color:var(--muted);margin:22px 0 0;max-width:66ch}
+.note{font-size:14px;color:var(--hero-muted);margin:0}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (min-width:640px){.qcard{width:230px}}
 </style>
 </head>
 <body>
 
-<div class="wrap">
-  <header>
-    <div class="eyebrow">Film room · basketball-reference data, 1999-00 to 2026-27</div>
-    <h1>Hoops <span>Data</span> Lab</h1>
-    <p class="sub">Ask a basketball question. Claude writes the query, it runs on real player and team seasons right here, and you get a lesson, a chart, the pandas version, and a challenge to try yourself.</p>
-    <div class="status" id="status">Loading data…</div>
-  </header>
-
-  <section class="panel ask" aria-label="Ask a question">
-    <label class="label" for="q">Your question</label>
-    <textarea id="q" placeholder="e.g. Who had the best true shooting on high usage last season?"></textarea>
-    <div class="chips" id="chips"></div>
-    <div class="row">
-      <div class="seg" role="group" aria-label="Level" id="level">
-        <button type="button" data-v="beginner">Beginner</button>
-        <button type="button" data-v="intermediate" aria-pressed="true">Intermediate</button>
-        <button type="button" data-v="advanced">Advanced</button>
+<header class="hero gutter">
+  <svg class="court" viewBox="0 0 340 340" fill="none" stroke="#FFFFFF" stroke-width="3" aria-hidden="true">
+    <rect x="20" y="20" width="300" height="300" rx="2"/><rect x="115" y="20" width="110" height="140"/>
+    <circle cx="170" cy="160" r="55"/><path d="M45 20 V95 A135 135 0 0 0 295 95 V20"/><circle cx="170" cy="58" r="10"/>
+  </svg>
+  <div class="inner">
+    <div class="kicker">27 seasons · every player · every team</div>
+    <h1>Hoops <em>Data</em> Lab</h1>
+    <p class="tag">Ask any NBA question. Get the answer, the chart, and how to find it yourself.</p>
+    <form class="askbox" id="askForm">
+      <input id="q" type="text" autocomplete="off" placeholder="Who's the most efficient scorer right now?" aria-label="Ask a basketball question">
+      <button class="go" id="go" type="submit">Ask</button>
+    </form>
+    <div class="mode"><span>Explain it</span>
+      <div class="seg" role="group" aria-label="Explanation depth" id="level">
+        <button type="button" data-v="beginner">Like a fan</button>
+        <button type="button" data-v="intermediate" aria-pressed="true">Like a student</button>
+        <button type="button" data-v="advanced">Like a front office</button>
       </div>
-      <span class="grow"></span>
-      <button class="btn" id="go" type="button">Build lesson</button>
     </div>
     <p class="note" id="askNote" hidden></p>
-  </section>
+    <div class="status" id="status">Warming up the data…</div>
+  </div>
+</header>
 
-  <section class="panel" id="lesson" aria-live="polite"></section>
+<section class="picks gutter" aria-label="Question ideas">
+  <div class="inner"><h3>Try one</h3><div class="rail" id="rail"></div></div>
+</section>
 
-  <section class="panel" id="histPanel" hidden>
-    <div class="label">Earlier questions</div>
+<main class="gutter"><div class="inner">
+  <article class="answer" id="answer" aria-live="polite"></article>
+  <section id="histPanel" hidden style="margin-top:22px">
+    <h3 class="sec-title">Your recent questions</h3>
     <div class="history" id="hist"></div>
   </section>
-
-  <details class="panel" id="schemaBox">
-    <summary>Tables and columns</summary>
-    <div id="schema" class="prose"></div>
-  </details>
-</div>
+  <p class="foot">Stats from Basketball-Reference, 1999-00 through the 2026-27 season in progress. Per-game numbers unless noted. Colored stats compare each value to the rest of the list: blue is better, red is worse.</p>
+</div></main>
 
 <script src="https://cdn.jsdelivr.net/npm/alasql@4.4.0/dist/alasql.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-let level = "intermediate", sample = null, chart = null, current = null, dataReady = false;
+let level = "intermediate", sample = null, chart = null, current = null, dataReady = false, tab = "how";
 
 const SCHEMA = `Tables (SQL engine: AlaSQL, in-browser):
 players: one row per player-season-team, NBA only, seasons 2000-2027.
   season (int, END year: 2024 = 2023-24; 2027 = 2026-27, IN PROGRESS, only a few games), player, age, team (3-letter code; '2TM','3TM','4TM','5TM' = season total for traded players, who ALSO have one row per team), pos,
   g, gs, mp (minutes per game), per-game box stats: fg, fga, fg_pct, fg3, fg3a, fg3_pct, fg2, fg2a, fg2_pct, e_fg_pct, ft, fta, ft_pct, orb, drb, trb, ast, stl, blk, tov, pf, pts,
   advanced: mp_total (season minutes), per, ts_pct, usg_pct, ws, ws_48, bpm, vorp.
-  Shooting pcts are 0-1 decimals; usg_pct is 0-100. Nulls possible (e.g. fg3_pct with 0 attempts).
+  Shooting pcts are 0-1 decimals; usg_pct is 0-100. Nulls possible.
 teams: one row per team-season, seasons 2000-2027.
-  season, team (full name), abbreviation (matches players.team), playoffs (TRUE/FALSE string), age, w, l, mov, srs, o_rtg, d_rtg, n_rtg, pace, fg3_ar (3PA rate), ts_pct, e_fg_pct, tov_pct, orb_pct, ft_fga.
-Engine rules: standard SELECT/WHERE/GROUP BY/HAVING/ORDER BY/LIMIT, JOIN, subqueries, WITH (CTEs), CASE, ROUND, ABS, SQRT, POWER, COUNT/SUM/AVG/MIN/MAX/STDEV/VAR all work. NO window functions (no OVER, RANK, ROW_NUMBER, LAG) - use self-joins or subqueries. No CORR(): compute Pearson r as (AVG(x*y)-AVG(x)*AVG(y))/(STDEVP-style) i.e. use SQRT(AVG(x*x)-AVG(x)*AVG(x)). Avoid reserved words as aliases (e.g. don't alias as "value", "rank", "count", "year", "key"); use snake_case aliases. String literals in single quotes.
-To avoid double counting traded players in one season, use team NOT LIKE '%TM' only when per-team rows are wanted, or keep the TM row and drop the per-team rows when a player-season total is wanted. Filter small samples (e.g. g >= 20 or mp_total >= 500).`;
+  season, team (full name), abbreviation (matches players.team), playoffs (TRUE/FALSE string), age, w, l, mov, srs, o_rtg, d_rtg, n_rtg, pace, fg3_ar (3PA rate, 0-1), ts_pct, e_fg_pct, tov_pct, orb_pct, ft_fga.
+Engine rules: SELECT/WHERE/GROUP BY/HAVING/ORDER BY/LIMIT, JOIN, subqueries, WITH (CTEs), CASE, ROUND, ABS, SQRT, POWER, COUNT/SUM/AVG/MIN/MAX/STDEV/VAR work. NO window functions (no OVER, RANK, ROW_NUMBER, LAG): use self-joins or subqueries. No CORR(): compute Pearson r with AVG(x*y)-AVG(x)*AVG(y) over SQRT(AVG(x*x)-AVG(x)*AVG(x)) times the same for y. Don't use reserved words as aliases (value, rank, count, year, key, top). snake_case aliases, single-quoted strings.
+One row per player-season (no traded-player double counting): AND (team LIKE '%TM' OR player NOT IN (SELECT player FROM players WHERE season = <S> AND team LIKE '%TM')). Filter small samples (g >= 20 or mp_total >= 500).`;
 
-const CHIPS = [
-  ["Filtering & sorting","Who were the most efficient high-volume scorers in 2025-26?"],
-  ["Aggregation","How has the average 3-point attempt rate changed by season since 2000?"],
-  ["Normalization","Compare players on a per-36 minute basis instead of per game. Who was most productive per 36 last season among rotation players?"],
-  ["Correlation","How strongly does team pace correlate with offensive rating across seasons?"],
-  ["Z-scores","Build 9-cat fantasy z-scores for 2025-26 and rank the top players."],
-  ["Era adjustment","Who are the best scorers since 2000 relative to their season's league average?"],
-  ["Joins","Do teams with older rosters win more? Join players and teams."],
-  ["Aging curves","At what age does the average player's BPM peak?"],
-  ["Outliers","Which teams most outperformed their point differential (wins vs SRS)?"],
+const CATS = {
+  "Leaderboards":"#2457C5","Trends":"#F07A1A","Efficiency":"#1E8A5A","Fantasy":"#8B4FD1","History":"#B5482F","Teams":"#0E8FA0","Player arcs":"#C2185B"
+};
+const PICKS = [
+  ["Efficiency","Who are the most efficient high-volume scorers of 2025-26?"],
+  ["Trends","How has the three-pointer taken over the league since 2000?"],
+  ["Fantasy","Rank the top 9-cat fantasy players of 2025-26 by z-score."],
+  ["History","Who are the best scorers since 2000 relative to their era?"],
+  ["Teams","Which teams won way more games than their point differential predicted?"],
+  ["Player arcs","At what age do NBA players hit their peak?"],
+  ["Leaderboards","Which big men racked up the most assists last season?"],
+  ["Teams","Does playing faster actually lead to a better offense?"],
 ];
 
 const EXAMPLE = {
-  question:"How has 3-point volume changed since 2000?",
-  title:"The three-point takeover", skill:"Aggregation · GROUP BY",
-  concept:"Group rows by a category, then summarize each group with an aggregate like AVG. Here each team-season is a row, so averaging fg3_ar by season gives one league-wide number per year. Using the team table avoids weighting by how many bench players a season had.",
-  sql:`SELECT season,\n       ROUND(AVG(fg3_ar), 3) AS three_pa_rate,\n       ROUND(AVG(pace), 1)   AS pace\nFROM teams\nWHERE season < 2027\nGROUP BY season\nORDER BY season`,
-  pandas:`(teams[teams.season < 2027]\n   .groupby("season", as_index=False)\n   .agg(three_pa_rate=("fg3_ar", "mean"),\n        pace=("pace", "mean"))\n   .round({"three_pa_rate": 3, "pace": 1}))`,
-  chart:{type:"line", x:"season", y:["three_pa_rate"]},
-  challenge:"Change the query to also show league-average true shooting (ts_pct) by season. Did efficiency rise along with volume?"
+  question:"Who were the top scorers of 2025-26?",
+  title:"Luka's scoring title", category:"Leaderboards",
+  takeaway:"Luka Dončić led the league at 33.5 points a night, but Shai Gilgeous-Alexander and Nikola Jokić got theirs far more efficiently, both above 66% true shooting. Jaylen Brown carried the heaviest load after Luka (36.2% usage) at the lowest efficiency in this group.",
+  steps:["Start with every player's 2025-26 season.","Keep players who appeared in at least 40 games, so hot streaks don't sneak in.","Count traded players once, using their combined season line.","Sort by points per game and show efficiency and usage alongside."],
+  concept:"Raw scoring rewards volume. Pairing points with true shooting % (which credits threes and free throws) and usage % (share of plays a player finishes) shows who scores efficiently and who just shoots a lot.",
+  sql:`SELECT player, team, pts, ts_pct, usg_pct, ast\nFROM players\nWHERE season = 2026 AND g >= 40\n  AND (team LIKE '%TM'\n       OR player NOT IN (SELECT player FROM players\n                         WHERE season = 2026 AND team LIKE '%TM'))\nORDER BY pts DESC\nLIMIT 25`,
+  pandas:`s = players[(players.season == 2026) & (players.g >= 40)]\ntraded = s.loc[s.team.str.endswith("TM"), "player"]\ns = s[s.team.str.endswith("TM") | ~s.player.isin(traded)]\n(s.sort_values("pts", ascending=False)\n  [["player", "team", "pts", "ts_pct", "usg_pct", "ast"]]\n  .head(25))`,
+  display:{type:"leaderboard", label:"player", sub:["team"], primary:"pts", stats:["ts_pct","usg_pct","ast"], lower_is_better:[]},
+  labels:{pts:"PPG", ts_pct:"TS%", usg_pct:"USG%", ast:"AST"},
+  challenge:"Re-sort the list by true shooting instead of points, but only for players scoring 20+. Who rises to the top?"
 };
+
+/* ---------- labels & formatting ---------- */
+const NICE = {pts:"PPG",trb:"REB",ast:"AST",stl:"STL",blk:"BLK",tov:"TOV",fg3:"3PM",fg3a:"3PA",fg_pct:"FG%",fg3_pct:"3P%",ft_pct:"FT%",ts_pct:"TS%",e_fg_pct:"eFG%",usg_pct:"USG%",per:"PER",ws:"WS",ws_48:"WS/48",bpm:"BPM",vorp:"VORP",mp:"MIN",g:"GP",age:"Age",w:"W",l:"L",mov:"MOV",srs:"SRS",o_rtg:"ORTG",d_rtg:"DRTG",n_rtg:"NET",pace:"Pace",fg3_ar:"3PA Rate",season:"Season",team:"Team",player:"Player"};
+const LOWER_DEFAULT = ["tov","d_rtg","pf","l"];
+const label = c => (current && current.labels && current.labels[c]) || NICE[c] || c.replace(/_/g," ").replace(/\b\w/g,m=>m.toUpperCase());
+const isPct = c => /(_pct|^fg3_ar)$/.test(c) || (current && (current.percent_cols||[]).includes(c));
+const isNum = v => typeof v==="number" && isFinite(v);
+function fmtVal(c,v){
+  if(v===null||v===undefined) return "—";
+  if(!isNum(v)) return c==="team"&&/TM$/.test(v) ? v[0]+" teams" : String(v);
+  if(c==="season") return `${v-1}-${String(v).slice(2)}`;
+  if(isPct(c) && v<=1.5) return (v*100).toFixed(1)+"%";
+  if(c==="usg_pct"||c.endsWith("_pct")) return v.toFixed(1)+"%";
+  if(Number.isInteger(v)) return String(v);
+  return Math.abs(v)<1 ? v.toFixed(3).replace(/^0/,"") : v.toFixed(1);
+}
+function pctRank(rows,c){ // returns fn value->0..1
+  const vals = rows.map(r=>r[c]).filter(isNum).sort((a,b)=>a-b);
+  return v => vals.length<4||!isNum(v) ? null : vals.filter(x=>x<v).length/(vals.length-1||1);
+}
+function tone(c,p,lower){ if(p===null) return ""; if(lower.includes(c)) p=1-p; return p>=.75?"hi":p<=.25?"lo":""; }
 
 /* ---------- data ---------- */
 function parseCSV(txt){
-  const lines = txt.replace(/\r/g,"").trim().split("\n");
-  const head = lines.shift().split(",");
-  const out = new Array(lines.length);
-  for (let i=0;i<lines.length;i++){
-    const v = lines[i].split(","), o = {};
-    for (let j=0;j<head.length;j++){
-      const x = v[j];
-      o[head[j]] = (x===undefined||x==="") ? null : (x!=="" && !isNaN(x) ? +x : x);
-    }
-    out[i]=o;
-  }
-  return out;
+  const lines = txt.replace(/\r/g,"").trim().split("\n"), head = lines.shift().split(",");
+  return lines.map(l=>{ const v=l.split(","), o={}; head.forEach((k,j)=>{ const x=v[j]; o[k]=(x===undefined||x==="")?null:(!isNaN(x)?+x:x); }); return o; });
 }
 async function loadData(){
   try{
-    const [p,t] = await Promise.all(["players.csv","teams.csv"].map(f=>fetch("data/"+f).then(r=>{if(!r.ok) throw new Error(f+" "+r.status); return r.text();})));
+    const [p,t] = await Promise.all(["players.csv","teams.csv"].map(f=>fetch("data/"+f).then(r=>{if(!r.ok) throw new Error(r.status); return r.text();})));
     alasql("CREATE TABLE players"); alasql.tables.players.data = parseCSV(p);
     alasql("CREATE TABLE teams");   alasql.tables.teams.data   = parseCSV(t);
     dataReady = true;
-    $("#status").innerHTML = `<b>${alasql.tables.players.data.length.toLocaleString()}</b> player-seasons · <b>${alasql.tables.teams.data.length}</b> team-seasons loaded`;
-    if (current) runLesson();
-  }catch(e){ $("#status").textContent = "Couldn't load the data files: " + e.message; }
+    $("#status").innerHTML = `<b>${alasql.tables.players.data.length.toLocaleString()}</b> player seasons · <b>${alasql.tables.teams.data.length}</b> team seasons ready`;
+    if(current) runQuery();
+  }catch(e){ $("#status").textContent = "The stats didn't load. Refresh to try again."; }
 }
 
-/* ---------- rendering ---------- */
-function isNum(v){ return typeof v==="number" && isFinite(v); }
-function fmt(v){ if(v===null||v===undefined) return "—"; if(isNum(v)) return Number.isInteger(v)?String(v):(Math.abs(v)<1?v.toFixed(3):v.toFixed(2).replace(/\.?0+$/,"")); return String(v); }
-
-function renderLesson(L){
-  current = L;
-  $("#lesson").innerHTML = `
-    <div class="lesson-head">
-      <span class="skill">${esc(L.skill||"Lesson")}</span>
+/* ---------- answer card ---------- */
+function renderAnswer(L, opts={}){
+  current = L; tab = "how";
+  const color = CATS[L.category] || "#2457C5";
+  $("#answer").innerHTML = `
+    <div class="a-head">
+      <span class="pill" style="background:${color}22;color:${color}">${esc(L.category||"Answer")}</span>
       <h2>${esc(L.title||L.question)}</h2>
-      <div class="meta">Q: ${esc(L.question)}</div>
+      <div class="asked">You asked: ${esc(L.question)}</div>
     </div>
-    <p class="prose">${esc(L.concept)}</p>
-    <div class="label">SQL · edit and run it</div>
-    <textarea class="sql" id="sql" spellcheck="false" autocapitalize="off" autocorrect="off">${esc(L.sql)}</textarea>
-    <div class="row"><button class="btn small" id="run" type="button">Run query</button><span class="meta" id="runMeta"></span></div>
-    <div class="err" id="err" hidden></div>
-    <div class="chartbox" id="chartbox" hidden><canvas id="cv"></canvas></div>
-    <div class="tablewrap" id="tw" hidden></div>
-    <div class="row"><button class="btn ghost small" id="explain" type="button">What does this tell me?</button></div>
-    <p class="answer" id="explainOut" hidden></p>
-    <details><summary>Same thing in pandas</summary><pre class="py">${esc(L.pandas||"")}</pre>
-      <p class="note">Shown for learning. The SQL above is what actually ran, so recreate this in a notebook to check yourself.</p></details>
-    <div class="challenge">
-      <div class="label">Your turn</div>
-      <p>${esc(L.challenge||"")}</p>
-      <div class="row"><button class="btn small" id="check" type="button">Check my query</button><button class="btn ghost small" id="hint" type="button">Hint</button></div>
-      <p class="answer" id="checkOut" hidden></p>
+    <div class="takeaway" id="takeaway"><span class="lbl">The takeaway</span><span id="takeText">${L.takeaway?esc(L.takeaway):'<span class="thinking">Reading the numbers…</span>'}</span></div>
+    <div class="viz" id="viz"></div>
+    <div class="tabs" role="tablist">
+      <button role="tab" id="t-how" aria-selected="true" type="button">How it's figured</button>
+      <button role="tab" id="t-try" aria-selected="false" type="button">Your turn</button>
+    </div>
+    <div class="tabpanel" id="p-how" role="tabpanel">
+      <p class="prose">${esc(L.concept||"")}</p>
+      ${(L.steps||[]).map((s,i)=>`<div class="step"><span class="n">${i+1}</span><span>${esc(s)}</span></div>`).join("")}
+      <details><summary>Show the query</summary>
+        <div class="codehead"><span class="meta">SQL · edit it and rerun</span><span class="meta" id="runMeta"></span></div>
+        <textarea class="sql" id="sql" spellcheck="false" autocapitalize="off" autocorrect="off" aria-label="SQL query">${esc(L.sql)}</textarea>
+        <div class="row" style="margin-top:8px"><button class="btn" id="run" type="button">Run it</button></div>
+        <p class="err" id="err" hidden></p>
+      </details>
+      <details><summary>Same thing in Python (pandas)</summary><pre class="py">${esc(L.pandas||"")}</pre></details>
+    </div>
+    <div class="tabpanel" id="p-try" role="tabpanel" hidden>
+      <div class="challenge"><span class="lbl">Challenge</span><p>${esc(L.challenge||"")}</p>
+        <span class="meta">Open “Show the query” under How it's figured, change it, then come back here.</span>
+        <div class="row"><button class="btn" id="check" type="button">Check my work</button><button class="btn ghost" id="hint" type="button">Give me a hint</button></div>
+        <p class="coach" id="coachOut" hidden></p>
+      </div>
     </div>`;
-  $("#run").onclick = runLesson;
-  $("#explain").onclick = explainResults;
-  $("#check").onclick = () => coach("check");
-  $("#hint").onclick = () => coach("hint");
-  toggleClaudeButtons();
-  if (dataReady) runLesson();
+  $("#t-how").onclick=()=>setTab("how"); $("#t-try").onclick=()=>setTab("try");
+  $("#run").onclick=()=>{ const r=runQuery(); if(r&&r.rows&&sample) autoTakeaway(true); };
+  $("#check").onclick=()=>coach("check"); $("#hint").onclick=()=>coach("hint");
+  toggleClaude();
+  if(dataReady){ runQuery(); if(!L.takeaway && opts.autoTake) autoTakeaway(false); }
+}
+function setTab(t){
+  tab=t; ["how","try"].forEach(x=>{ $("#t-"+x).setAttribute("aria-selected",x===t); $("#p-"+x).hidden = x!==t; });
 }
 
-function runLesson(){
-  const sql = $("#sql").value.trim(), err=$("#err");
-  err.hidden = true;
-  if(!dataReady){ $("#runMeta").textContent="Waiting for data…"; return; }
-  const t0 = performance.now();
+function runQuery(){
+  const sql=$("#sql").value.trim(), err=$("#err"); err.hidden=true;
+  if(!dataReady) return null;
   let rows;
-  try{ rows = alasql(sql); if(!Array.isArray(rows)) rows=[]; }
-  catch(e){ err.textContent = "Query error: " + (e.message||e).split("\n").slice(0,3).join("\n"); err.hidden=false; $("#runMeta").textContent=""; current.rows=null; return {error:e.message}; }
-  current.rows = rows; current.ranSql = sql;
-  $("#runMeta").textContent = `${rows.length.toLocaleString()} rows · ${Math.round(performance.now()-t0)} ms`;
-  renderTable(rows); renderChart(rows, current.chart);
+  try{ rows=alasql(sql); if(!Array.isArray(rows)) rows=[]; }
+  catch(e){ err.textContent="That query didn't run: "+String(e.message||e).split("\n")[0]; err.hidden=false; current.rows=null; return {error:String(e.message||e)}; }
+  current.rows=rows; current.ranSql=sql;
+  $("#runMeta").textContent=`${rows.length} rows`;
+  renderViz(rows);
   return {rows};
 }
 
-function renderTable(rows){
-  const tw=$("#tw");
-  if(!rows.length){ tw.hidden=false; tw.innerHTML='<p class="note" style="padding:12px">No rows matched.</p>'; return; }
-  const cols = Object.keys(rows[0]), show = rows.slice(0,100);
-  tw.innerHTML = `<table><thead><tr>${cols.map(c=>`<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>${
-    show.map(r=>`<tr>${cols.map(c=>`<td class="${isNum(r[c])?"num":""}">${esc(fmt(r[c]))}</td>`).join("")}</tr>`).join("")}</tbody></table>${rows.length>100?`<p class="note" style="padding:8px 10px">Showing 100 of ${rows.length}.</p>`:""}`;
-  tw.hidden=false;
+function renderViz(rows){
+  const viz=$("#viz"); if(chart){chart.destroy();chart=null;}
+  if(!rows.length){ viz.innerHTML='<p class="meta">Nothing matched. Try loosening a filter.</p>'; return; }
+  const cols=Object.keys(rows[0]);
+  const d=Object.assign({}, current.display||{});
+  let type=d.type||"table";
+  if((type==="line"||type==="bar"||type==="scatter"||type==="trend") && typeof Chart==="undefined") type="table";
+  if(type==="leaderboard") return renderBoard(rows,cols,d);
+  if(type==="trend"||type==="line"||type==="bar"||type==="scatter") return renderChart(rows,cols,d,type);
+  renderTable(rows,cols,d);
+}
+
+function renderBoard(rows,cols,d){
+  const lab = cols.includes(d.label)?d.label:cols.find(c=>typeof rows[0][c]==="string")||cols[0];
+  const prim = cols.includes(d.primary)?d.primary:cols.find(c=>c!==lab&&isNum(rows[0][c]));
+  const subs=(d.sub||[]).filter(c=>cols.includes(c));
+  const stats=(d.stats&&d.stats.length?d.stats:cols.filter(c=>c!==lab&&c!==prim&&!subs.includes(c)&&isNum(rows[0][c]))).filter(c=>cols.includes(c)).slice(0,4);
+  const lower=[...(d.lower_is_better||[]),...LOWER_DEFAULT];
+  const pv=rows.map(r=>r[prim]).filter(isNum), max=Math.max(...pv), min=Math.min(0,...pv);
+  const ranks={}; stats.forEach(c=>ranks[c]=pctRank(rows,c));
+  let shown = Math.min(rows.length, 10);
+  const draw=()=>{
+    const html = rows.slice(0,shown).map((r,i)=>{
+      const w = isNum(r[prim]) && max>min ? Math.max(4,((r[prim]-min)/(max-min))*100) : 0;
+      const subTxt = subs.map(c=>fmtVal(c,r[c])).join(" · ");
+      return `<div class="lb-row"><span class="rank">${i+1}</span>
+        <div class="who"><span class="name">${esc(fmtVal(lab,r[lab]))}</span>${subTxt?`<span class="sub">${esc(subTxt)}</span>`:""}
+          <div class="bar"><i style="width:${w}%"></i></div>
+          ${stats.length?`<div class="chips">${stats.map(c=>`<span class="chip ${tone(c,ranks[c](r[c]),lower)}"><b>${esc(label(c))}</b>${esc(fmtVal(c,r[c]))}</span>`).join("")}</div>`:""}
+        </div>
+        <div class="big"><strong>${esc(fmtVal(prim,r[prim]))}</strong><span>${esc(label(prim))}</span></div></div>`;
+    }).join("");
+    $("#viz").innerHTML = `<div class="lb">${html}</div>` +
+      (rows.length>shown?`<button class="more" id="more" type="button">Show ${Math.min(rows.length-shown,15)} more</button>`:"") +
+      (stats.length?`<div class="legend"><span class="chip hi">Top of list</span><span class="chip lo">Bottom of list</span><span>compared within these results</span></div>`:"");
+    const m=$("#more"); if(m) m.onclick=()=>{ shown=Math.min(rows.length,shown+15); draw(); };
+  };
+  draw();
 }
 
 function cssVar(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
-function renderChart(rows, spec){
-  const box=$("#chartbox");
-  if(chart){ chart.destroy(); chart=null; }
-  if(!spec || !spec.type || spec.type==="none" || !rows.length || typeof Chart==="undefined"){ box.hidden=true; return; }
-  const cols = Object.keys(rows[0]);
-  const ys = (Array.isArray(spec.y)?spec.y:[spec.y]).filter(y=>cols.includes(y));
-  if(!cols.includes(spec.x) || !ys.length){ box.hidden=true; return; }
-  const ink=cssVar("--ink"), muted=cssVar("--muted"), line=cssVar("--line");
-  const palette=[cssVar("--court"),cssVar("--leather"),cssVar("--good"),cssVar("--muted")];
-  const data = rows.slice(0, spec.type==="scatter"?2000:60);
+function renderChart(rows,cols,d,type){
+  const x = cols.includes(d.x)?d.x:cols[0];
+  const ys=(Array.isArray(d.y)?d.y:[d.y]).filter(c=>cols.includes(c));
+  if(!ys.length){ const f=cols.find(c=>c!==x&&isNum(rows[0][c])); if(f) ys.push(f); else return renderTable(rows,cols,d); }
+  $("#viz").innerHTML='<div class="chartbox"><canvas id="cv" aria-label="Chart of results"></canvas></div><details><summary>See the numbers</summary><div id="tbl"></div></details>';
+  const ink=cssVar("--ink"),muted=cssVar("--muted"),line=cssVar("--line");
+  const pal=[cssVar("--court"),cssVar("--accent"),"#1E8A5A","#8B4FD1"];
+  const data=rows.slice(0,type==="scatter"?2500:80);
   let cfg;
-  if(spec.type==="scatter"){
-    cfg={type:"scatter",data:{datasets:[{label:ys[0],data:data.map(r=>({x:r[spec.x],y:r[ys[0]],l:spec.label?r[spec.label]:""})).filter(p=>isNum(p.x)&&isNum(p.y)),backgroundColor:palette[0]+"AA",pointRadius:3.5}]},
-      options:{plugins:{tooltip:{callbacks:{label:c=>`${c.raw.l?c.raw.l+": ":""}${fmt(c.raw.x)}, ${fmt(c.raw.y)}`}}}}};
+  if(type==="scatter"){
+    const lab=cols.includes(d.label)?d.label:cols.find(c=>typeof rows[0][c]==="string");
+    cfg={type:"scatter",data:{datasets:[{label:label(ys[0]),data:data.map(r=>({x:r[x],y:r[ys[0]],l:lab?r[lab]:""})).filter(p=>isNum(p.x)&&isNum(p.y)),backgroundColor:pal[0]+"99",borderColor:pal[0],pointRadius:4,pointHoverRadius:7}]},
+      options:{plugins:{tooltip:{callbacks:{label:c=>`${c.raw.l?c.raw.l+" · ":""}${label(x)} ${fmtVal(x,c.raw.x)}, ${label(ys[0])} ${fmtVal(ys[0],c.raw.y)}`}}}}};
   }else{
-    cfg={type:spec.type==="bar"?"bar":"line",data:{labels:data.map(r=>fmt(r[spec.x])),datasets:ys.map((y,i)=>({label:y,data:data.map(r=>r[y]),borderColor:palette[i%4],backgroundColor:spec.type==="bar"?palette[i%4]:palette[i%4]+"22",fill:spec.type!=="bar"&&ys.length===1,tension:.25,pointRadius:spec.type==="bar"?0:2,yAxisID:i===0?"y":(ys.length===2?"y1":"y")}))}};
-    if(spec.type==="bar" && data.length>8 && typeof data[0][spec.x]==="string") cfg.options={indexAxis:"y"};
+    const isBar = type==="bar";
+    cfg={type:isBar?"bar":"line",data:{labels:data.map(r=>fmtVal(x,r[x])),datasets:ys.map((y,i)=>({label:label(y),data:data.map(r=>r[y]),borderColor:pal[i%4],backgroundColor:isBar?pal[i%4]:pal[i%4]+"26",fill:!isBar&&ys.length===1,tension:.3,borderWidth:3,pointRadius:0,pointHoverRadius:5,borderRadius:isBar?6:0,yAxisID:i===1&&ys.length===2?"y1":"y"}))}};
+    if(isBar && data.length>6 && typeof data[0][x]==="string") cfg.options={indexAxis:"y"};
   }
-  cfg.options = Object.assign({responsive:true,maintainAspectRatio:false,animation:false,
-    plugins:{legend:{display:ys.length>1,labels:{color:ink,boxWidth:12}}},
-    scales:{x:{ticks:{color:muted,maxRotation:0,autoSkip:true},grid:{color:line},title:{display:spec.type==="scatter",text:spec.x,color:muted}},
-            y:{ticks:{color:muted},grid:{color:line},title:{display:true,text:ys[0],color:muted}}}}, cfg.options||{});
-  if(cfg.options.plugins.tooltip===undefined && cfg.type==="scatter") {}
-  if(ys.length===2 && cfg.type==="line") cfg.options.scales.y1={position:"right",ticks:{color:muted},grid:{display:false},title:{display:true,text:ys[1],color:muted}};
-  if(cfg.options.indexAxis==="y"){ const s=cfg.options.scales; [s.x,s.y]=[s.y,s.x]; }
-  box.hidden=false;
-  chart = new Chart($("#cv"), cfg);
+  const tick = y => v => isPct(y)&&Math.abs(v)<=1.5 ? Math.round(v*100)+"%" : v;
+  cfg.options=Object.assign({responsive:true,maintainAspectRatio:false,animation:{duration:500},interaction:{mode:type==="scatter"?"nearest":"index",intersect:false},
+    plugins:{legend:{display:ys.length>1,labels:{color:ink,boxWidth:12,font:{family:"Barlow Condensed",size:13,weight:"600"}}},
+      tooltip:{backgroundColor:"#0E2247",titleFont:{family:"Barlow"},bodyFont:{family:"Barlow"},padding:10,
+        callbacks:type==="scatter"?undefined:{label:c=>` ${c.dataset.label}: ${fmtVal(ys[c.datasetIndex],c.raw)}`}}},
+    scales:{x:{ticks:{color:muted,maxRotation:0,autoSkip:true,font:{family:"Barlow"},callback:type==="scatter"?tick(x):undefined},grid:{display:false},title:{display:type==="scatter",text:label(x),color:muted}},
+            y:{ticks:{color:muted,font:{family:"Barlow"},callback:tick(ys[0])},grid:{color:line},border:{display:false},title:{display:true,text:label(ys[0]),color:muted,font:{family:"Barlow Condensed",size:13,weight:"600"}}}}},cfg.options||{});
+  if(type==="scatter") cfg.options.plugins.tooltip.callbacks = {label:c=>`${c.raw.l?c.raw.l+" · ":""}${label(x)} ${fmtVal(x,c.raw.x)}, ${label(ys[0])} ${fmtVal(ys[0],c.raw.y)}`};
+  if(cfg.options.indexAxis==="y"){ const s=cfg.options.scales; [s.x,s.y]=[s.y,s.x]; s.x.grid={color:line}; s.y.grid={display:false}; s.y.ticks.callback=undefined; }
+  if(ys.length===2&&cfg.type==="line") cfg.options.scales.y1={position:"right",ticks:{color:muted,callback:tick(ys[1])},grid:{display:false},title:{display:true,text:label(ys[1]),color:muted}};
+  chart=new Chart($("#cv"),cfg);
+  renderTable(rows,cols,d,$("#tbl"));
+}
+
+function renderTable(rows,cols,d,into){
+  const lower=[...((d&&d.lower_is_better)||[]),...LOWER_DEFAULT];
+  const ranks={}; cols.forEach(c=>{ if(isNum(rows[0][c]) && c!=="season") ranks[c]=pctRank(rows,c); });
+  const html=`<div class="tablewrap"><table><thead><tr>${cols.map(c=>`<th>${esc(label(c))}</th>`).join("")}</tr></thead><tbody>${
+    rows.slice(0,100).map(r=>`<tr>${cols.map(c=>`<td class="${isNum(r[c])?"num":""} ${ranks[c]?tone(c,ranks[c](r[c]),lower):""}">${esc(fmtVal(c,r[c]))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+  (into||$("#viz")).innerHTML=html;
 }
 
 /* ---------- Claude ---------- */
-function toggleClaudeButtons(){
-  const off = !sample;
-  ["#explain","#check","#hint"].forEach(s=>{ const b=$(s); if(b) b.hidden=off; });
-}
+function toggleClaude(){ ["#check","#hint"].forEach(s=>{ const b=$(s); if(b) b.hidden=!sample; }); }
 function errCopy(e){
-  switch(e && e.code){
+  switch(e&&e.code){
     case "not_granted": case "sampling_disabled": case "not_declared": case "capability_disabled": case "capability_removed":
-      sample=null; toggleClaudeButtons(); $("#go").disabled=true; return "Claude isn't available on this page right now. You can still edit and run the SQL yourself.";
-    case "rate_limited": return "Too many requests for now. Wait a minute and try again.";
-    case "session_expired": return "Sign in to Claude again, then retry.";
-    case "invalid_json": return "Claude's answer came back in a shape the lab couldn't read. Try again, or rephrase the question.";
-    case "refused": return "Claude declined that one. Try rephrasing.";
+      sample=null; toggleClaude(); $("#go").disabled=true; return "Asking new questions needs Claude, which isn't available here. You can still explore and edit this one.";
+    case "rate_limited": return "That's a lot of questions at once. Give it a minute and ask again.";
+    case "session_expired": return "Sign in to Claude again, then ask.";
+    case "invalid_json": return "The answer came back garbled. Try asking again.";
+    case "refused": return "Try asking that a different way.";
     case "cancelled": return "";
-    default: return "Something went wrong reaching Claude. Try again.";
+    default: return "Couldn't reach Claude just now. Try again.";
   }
 }
-
-const LEVEL_NOTE = {
-  beginner:"Learner is new to SQL/pandas: keep queries short (one table, simple WHERE/GROUP BY), explain every clause plainly.",
-  intermediate:"Learner knows basic SQL and pandas: use joins, subqueries or CTEs when they help, and explain the analytical idea more than syntax.",
-  advanced:"Learner is a data science grad aiming at NBA front-office work: use multi-step CTEs, normalization, z-scores, correlation, and discuss statistical caveats (sample size, selection bias, era effects)."
+const LEVEL = {
+  beginner:"Audience: a casual fan. Plain words, no jargon; define any stat you mention in a few words. Keep the query simple.",
+  intermediate:"Audience: a data science student who knows basic SQL and pandas. Explain the analytical idea and the key query choices.",
+  advanced:"Audience: an analyst aiming for an NBA front office. Use rigorous methods (normalization, z-scores, era adjustment, correlation) and name the statistical caveats."
 };
 
-async function buildLesson(){
-  const q = $("#q").value.trim(); const note=$("#askNote");
+async function ask(q){
+  const note=$("#askNote");
   if(!q){ $("#q").focus(); return; }
-  if(!sample){ note.textContent="Claude isn't available here, so try the example lesson or edit its SQL."; note.hidden=false; return; }
-  note.hidden=true; $("#go").disabled=true; $("#go").textContent="Thinking…";
-  $("#lesson").innerHTML = `<p class="thinking">Writing a lesson for “${esc(q)}”… this usually takes 10 to 40 seconds.</p>`;
-  const prompt = `You are a basketball analytics coach teaching data science through real NBA data. The learner asked:
+  if(!sample){ note.textContent="New questions need Claude, which isn't connected in this view."; note.hidden=false; return; }
+  note.hidden=true; $("#go").disabled=true; $("#go").textContent="…";
+  $("#answer").innerHTML=`<div class="a-head"><span class="pill">Working on it</span><h2>${esc(q)}</h2><div class="asked thinking">Pulling the numbers. This takes about 15 to 40 seconds.</div></div>`;
+  $("#answer").scrollIntoView({behavior:"smooth",block:"start"});
+  const prompt=`You are an NBA analytics coach who makes data science fun. A user asked:
 "${q}"
-${LEVEL_NOTE[level]}
+${LEVEL[level]}
 
 ${SCHEMA}
 
 Reply with ONLY a JSON object:
-{"title": short punchy lesson title (max 6 words),
- "skill": the data science skill taught, e.g. "Normalization · per-36",
- "concept": 2-4 sentences teaching the core idea and why the query is built this way (mention any caveats like small samples or the in-progress 2027 season),
- "sql": one runnable AlaSQL query following the engine rules exactly, readable with line breaks, returning at most ~60 rows unless a scatter needs more,
- "pandas": the equivalent pandas code assuming DataFrames named players and teams,
- "chart": {"type": "line"|"bar"|"scatter"|"none", "x": result column, "y": [1-2 result columns], "label": optional result column for scatter tooltips},
- "challenge": one concrete follow-up task the learner should do by editing the SQL themselves (don't give the answer)}
-"Last season" means 2026 (the 2025-26 season) since 2027 is barely started.`;
+{"title": a punchy headline-style title, max 6 words, like a sports site,
+ "category": one of "Leaderboards","Trends","Efficiency","Fantasy","History","Teams","Player arcs",
+ "concept": 2-3 friendly sentences explaining the idea behind the method and why it's a fair way to answer (mention caveats such as small samples or that 2027 is in progress),
+ "steps": 3-5 short plain-English steps describing what the query does, no SQL words,
+ "sql": one runnable AlaSQL query following the engine rules exactly, nicely line-broken, max ~60 rows unless a scatter,
+ "pandas": equivalent pandas code with DataFrames named players and teams,
+ "display": choose the most engaging view:
+    leaderboard (ranked list of players/teams) -> {"type":"leaderboard","label": name column,"sub": [1-2 context columns like team, season],"primary": the ranking metric column,"stats": [2-4 supporting numeric columns],"lower_is_better": [columns where lower is better]}
+    trend over seasons/ages -> {"type":"trend","x": column,"y": [1-2 columns]}
+    comparison of categories -> {"type":"bar","x": category column,"y": [1 column]}
+    relationship -> {"type":"scatter","x": col,"y": [col],"label": name column}
+ "labels": {result_column: short display label like "PPG", "TS%", "Z-Score"} for every result column,
+ "percent_cols": result columns that are 0-1 fractions to show as percentages,
+ "challenge": one fun, concrete follow-up the user can try by editing the query (no answer)}
+"Last season" or "this past season" means 2026 (2025-26) because 2027 has barely started; prefer 2026 unless they ask about the current season.`;
   try{
-    let L = await sample.json(prompt, {modelTier:"default"});
-    if(!L || typeof L.sql!=="string") throw {code:"invalid_json"};
+    let L=await sample.json(prompt,{modelTier:"default"});
+    if(!L||typeof L.sql!=="string") throw {code:"invalid_json"};
     L.question=q;
-    renderLesson(L);
-    const res = runLesson();
-    if(res && res.error){
-      $("#runMeta").textContent="Query failed, asking Claude to fix it once…";
-      const fix = await sample.json(`This AlaSQL query failed.\n\nQuery:\n${L.sql}\n\nError: ${res.error}\n\n${SCHEMA}\n\nReply with ONLY JSON {"sql": corrected query, "chart": {"type","x","y","label"} matching its columns}.`, {modelTier:"default", cache:false});
-      if(fix && fix.sql){ L.sql=fix.sql; if(fix.chart) L.chart=fix.chart; renderLesson(L); }
+    renderAnswer(L);
+    let r=runQuery();
+    if(r&&r.error){
+      $("#takeText").innerHTML='<span class="thinking">Fixing a snag in the query…</span>';
+      const fix=await sample.json(`This AlaSQL query failed.\nQuery:\n${L.sql}\nError: ${r.error}\n\n${SCHEMA}\n\nReply with ONLY JSON {"sql": corrected query, "display": same shape as before matching the new columns: ${JSON.stringify(L.display)}}.`,{modelTier:"default",cache:false});
+      if(fix&&fix.sql){ L.sql=fix.sql; if(fix.display) L.display=fix.display; renderAnswer(L); r=runQuery(); }
     }
-    saveHistory(L);
+    if(r&&r.rows){ await autoTakeaway(false); saveHistory(current); }
+    else $("#takeText").textContent="The query hit a snag. Open “Show the query” to see what went wrong, or ask again.";
   }catch(e){
-    const m = errCopy(e);
-    $("#lesson").innerHTML = `<p class="err">${esc(m)}</p>`;
-    if(current && current.question!==q) {/* keep error visible */}
-  }finally{ $("#go").disabled=!sample; $("#go").textContent="Build lesson"; }
+    $("#answer").innerHTML=`<div class="a-head"><span class="pill" style="background:var(--lo-bg);color:var(--lo)">Hmm</span><h2>${esc(q)}</h2><p class="err">${esc(errCopy(e))}</p></div>`;
+  }finally{ $("#go").disabled=!sample; $("#go").textContent="Ask"; }
 }
 
-function rowsPreview(rows, n=40){
+function preview(rows,n=30){
   if(!rows||!rows.length) return "(no rows)";
   const cols=Object.keys(rows[0]);
-  return [cols.join(" | "), ...rows.slice(0,n).map(r=>cols.map(c=>fmt(r[c])).join(" | "))].join("\n") + (rows.length>n?`\n… ${rows.length-n} more rows`:"");
+  return [cols.join(" | "),...rows.slice(0,n).map(r=>cols.map(c=>isNum(r[c])?+r[c].toFixed(3):r[c]).join(" | "))].join("\n")+(rows.length>n?`\n(${rows.length-n} more rows)`:"");
 }
-
-async function explainResults(){
-  const out=$("#explainOut"), b=$("#explain");
-  if(!current.rows){ out.hidden=false; out.textContent="Run a query that works first."; return; }
-  b.disabled=true; out.hidden=false; out.innerHTML='<span class="thinking">Reading the results…</span>';
+async function autoTakeaway(edited){
+  const el=$("#takeText"); if(!el||!current.rows) return;
+  el.innerHTML='<span class="thinking">Reading the numbers…</span>';
   try{
-    await sample(`You're an NBA analytics coach. The learner asked "${current.question}" and ran this query:\n${current.ranSql}\n\nResults:\n${rowsPreview(current.rows)}\n\nIn 4-6 short sentences of plain prose: what the numbers actually show, one thing that surprised you or deserves skepticism (sample size, era, selection), and how a front office might use this. No markdown, no em dashes.`,
-      {onText:({text})=>{out.textContent=text;}});
-  }catch(e){ out.textContent = e.text || errCopy(e); }
-  finally{ b.disabled=false; }
+    const {text}=await sample(`You write the headline takeaway for a basketball stats site. Question: "${current.question}"${edited?" (the user edited the query)":""}.\nResults:\n${preview(current.rows)}\n\nWrite 2-3 punchy sentences a fan would enjoy: the clear answer with specific names and numbers from the results, then the most interesting wrinkle. Only use numbers that appear above. Show 0-1 fractions as percentages. ${LEVEL[level].split(".")[0]}. Plain text, no markdown, no em dashes.`,
+      {modelTier:"quick",onText:({text})=>{el.textContent=text;}});
+    current.takeaway=text;
+  }catch(e){ el.textContent = e.text || errCopy(e) || "Check the results below."; }
 }
 
 async function coach(mode){
-  const out=$("#checkOut");
-  const sql=$("#sql").value.trim();
-  out.hidden=false; out.innerHTML='<span class="thinking">'+(mode==="hint"?"Thinking of a hint…":"Checking your query…")+'</span>';
+  const out=$("#coachOut"), sql=$("#sql").value.trim();
+  out.hidden=false; out.innerHTML=`<span class="thinking">${mode==="hint"?"Thinking up a hint…":"Checking your work…"}</span>`;
   let prompt;
-  if(mode==="hint"){
-    prompt=`An NBA data science learner is working on this challenge: "${current.challenge}"\nTheir current SQL:\n${sql}\n\n${SCHEMA}\n\nGive ONE short hint (1-2 sentences) that nudges them toward the next step without writing the query. Plain text, no em dashes.`;
-  }else{
-    const r = runLesson();
-    const result = r && r.error ? "ERROR: "+r.error : rowsPreview(current.rows, 25);
-    prompt=`An NBA data science learner attempted this challenge: "${current.challenge}"\nTheir SQL:\n${sql}\n\nIt produced:\n${result}\n\n${SCHEMA}\n\nGrade it like a supportive but honest coach in 3-5 sentences: does it answer the challenge correctly, any logic bugs (double counting traded players, small samples, wrong filters), and one way to make it better. If it is wrong, say what is wrong but do not paste a full corrected query. Plain text, no em dashes.`;
+  if(mode==="hint") prompt=`A learner is working on this NBA data challenge: "${current.challenge}"\nTheir current query:\n${sql}\n\n${SCHEMA}\n\nGive ONE friendly hint in 1-2 sentences pointing at the next change to make. Don't write the query. Plain text, no em dashes.`;
+  else{
+    const r=runQuery(); const res=r&&r.error?"ERROR: "+r.error:preview(current.rows,20);
+    prompt=`A learner attempted this NBA data challenge: "${current.challenge}"\nTheir query:\n${sql}\n\nResult:\n${res}\n\n${SCHEMA}\n\nCoach them in 3-4 sentences, encouraging but honest: did they nail it, any logic issues (double-counted traded players, tiny samples, wrong season), and one way to level it up. Don't paste a full corrected query. Plain text, no em dashes.`;
   }
   try{ await sample(prompt,{cache:false,onText:({text})=>{out.textContent=text;}}); }
-  catch(e){ out.textContent = e.text || errCopy(e); }
+  catch(e){ out.textContent=e.text||errCopy(e); }
 }
 
-/* ---------- history (this browser only) ---------- */
-function loadHistory(){ try{ return JSON.parse(localStorage.getItem("hdl-history")||"[]"); }catch{ return []; } }
+/* ---------- history ---------- */
+function loadHist(){ try{ return JSON.parse(localStorage.getItem("hdl-history-v2")||"[]"); }catch{ return []; } }
 function saveHistory(L){
-  const h = loadHistory().filter(x=>x.question!==L.question);
-  h.unshift({question:L.question,title:L.title,skill:L.skill,concept:L.concept,sql:L.sql,pandas:L.pandas,chart:L.chart,challenge:L.challenge});
-  try{ localStorage.setItem("hdl-history", JSON.stringify(h.slice(0,12))); }catch{}
-  drawHistory();
+  const keep=(({question,title,category,takeaway,concept,steps,sql,pandas,display,labels,percent_cols,challenge})=>({question,title,category,takeaway,concept,steps,sql,pandas,display,labels,percent_cols,challenge}))(L);
+  const h=[keep,...loadHist().filter(x=>x.question!==L.question)].slice(0,12);
+  try{ localStorage.setItem("hdl-history-v2",JSON.stringify(h)); }catch{}
+  drawHist();
 }
-function drawHistory(){
-  const h=loadHistory(); $("#histPanel").hidden=!h.length;
-  $("#hist").innerHTML="";
-  h.forEach(L=>{ const b=document.createElement("button"); b.type="button"; b.textContent=L.title?`${L.title} · ${L.question}`:L.question; b.onclick=()=>{renderLesson(L); window.scrollTo({top:$("#lesson").offsetTop-12,behavior:"smooth"});}; $("#hist").appendChild(b); });
+function drawHist(){
+  const h=loadHist(); $("#histPanel").hidden=!h.length; const box=$("#hist"); box.innerHTML="";
+  h.forEach(L=>{ const b=document.createElement("button"); b.type="button";
+    b.innerHTML=`${esc(L.title||L.question)}<span>${esc(L.category||"")}</span>`;
+    b.onclick=()=>{ renderAnswer(L); $("#answer").scrollIntoView({behavior:"smooth",block:"start"}); }; box.appendChild(b); });
 }
 
 /* ---------- boot ---------- */
-CHIPS.forEach(([label,q])=>{ const c=document.createElement("button"); c.type="button"; c.className="chip"; c.textContent=label; c.onclick=()=>{$("#q").value=q; $("#q").focus();}; $("#chips").appendChild(c); });
+PICKS.forEach(([cat,q])=>{
+  const b=document.createElement("button"); b.type="button"; b.className="qcard";
+  b.innerHTML=`<span class="cat" style="color:${CATS[cat]}">${esc(cat)}</span><span class="qq">${esc(q)}</span>`;
+  b.onclick=()=>{ $("#q").value=q; if(sample) ask(q); else { $("#q").focus(); } };
+  $("#rail").appendChild(b);
+});
 $("#level").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; level=b.dataset.v; $("#level").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b)); });
-$("#go").onclick=buildLesson;
-$("#q").addEventListener("keydown",e=>{ if(e.key==="Enter"&&(e.metaKey||e.ctrlKey)) buildLesson(); });
-$("#schema").innerHTML = "<pre class='py' style='white-space:pre-wrap'>"+esc(SCHEMA.split("Engine rules")[0])+"</pre>";
-renderLesson(EXAMPLE); drawHistory(); loadData();
-(async()=>{ try{ sample = window.claude ? await window.claude.use("sample") : null; }catch{ sample=null; }
-  toggleClaudeButtons();
-  if(!sample){ $("#go").disabled=true; const n=$("#askNote"); n.textContent="Claude isn't connected in this view. The example lesson and SQL editor still work."; n.hidden=false; }
+$("#askForm").addEventListener("submit",e=>{ e.preventDefault(); ask($("#q").value.trim()); });
+renderAnswer(EXAMPLE); drawHist(); loadData();
+(async()=>{
+  try{ sample = window.claude ? await window.claude.use("sample") : null; }catch{ sample=null; }
+  toggleClaude();
+  if(!sample){ $("#go").disabled=true; const n=$("#askNote"); n.textContent="Asking new questions works inside Claude. Here you can explore the example and edit its query."; n.hidden=false; }
 })();
 </script>
 
