@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Hoops Data Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+html{color-scheme:light}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}
+/* Layout: one narrow scouting-notebook column; ask at top, lesson cards flow below like a film-room session */
+:root{
+  --bg:#F3F5F8; --paper:#FFFFFF; --ink:#14213A; --muted:#5A667D; --line:#D9DFE8;
+  --court:#1F4B99; --leather:#D9741E; --leather-soft:#FBEBDC; --court-soft:#E4ECF8;
+  --good:#1E7A4C; --bad:#B3261E; --code-bg:#0F1A2E; --code-fg:#DCE6F5;
+  --display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0C1220; --paper:#141C2E; --ink:#E6ECF6; --muted:#97A3B9; --line:#26314A;
+  --court:#7EA6F0; --leather:#F0954A; --leather-soft:#3A2614; --court-soft:#1A2744;
+  --good:#5CC48F; --bad:#F2867E; --code-bg:#080D18; --code-fg:#DCE6F5; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0C1220; --paper:#141C2E; --ink:#E6ECF6; --muted:#97A3B9; --line:#26314A;
+  --court:#7EA6F0; --leather:#F0954A; --leather-soft:#3A2614; --court-soft:#1A2744;
+  --good:#5CC48F; --bad:#F2867E; --code-bg:#080D18; --code-fg:#DCE6F5; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+.wrap{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+header{display:flex;flex-direction:column;gap:4px}
+.eyebrow{font:500 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--leather)}
+h1{font:800 44px/0.95 var(--display);letter-spacing:.01em;margin:0;text-transform:uppercase;text-wrap:balance}
+h1 span{color:var(--court)}
+.sub{color:var(--muted);margin:4px 0 0;max-width:60ch}
+.status{font:12px/1.4 var(--mono);color:var(--muted)}
+.status b{color:var(--ink);font-weight:500}
+
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.ask textarea{width:100%;min-height:84px;resize:vertical;border:1px solid var(--line);border-radius:10px;padding:12px;font:15px/1.45 var(--body);background:var(--bg);color:var(--ink)}
+.ask textarea:focus,.sql:focus{outline:2px solid var(--court);outline-offset:1px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:7px 12px;font:500 13px/1 var(--body);cursor:pointer}
+.chip:hover{border-color:var(--court)}
+.seg{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.seg button{border:0;background:transparent;color:var(--muted);padding:7px 11px;font:500 12px/1 var(--body);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--court);color:#fff}
+.btn{border:0;border-radius:10px;padding:11px 16px;font:600 14px/1 var(--body);cursor:pointer;background:var(--leather);color:#1A0E03}
+.btn.ghost{background:transparent;color:var(--court);border:1px solid var(--line)}
+.btn.small{padding:8px 12px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:default}
+.btn:focus-visible,.chip:focus-visible,.seg button:focus-visible,summary:focus-visible{outline:2px solid var(--court);outline-offset:2px}
+.grow{flex:1}
+.label{font:500 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+.lesson-head{display:flex;flex-direction:column;gap:6px}
+.lesson-head h2{font:800 28px/1 var(--display);text-transform:uppercase;margin:0;text-wrap:balance}
+.skill{align-self:flex-start;background:var(--court-soft);color:var(--court);border-radius:6px;padding:4px 8px;font:500 12px/1.2 var(--mono)}
+.prose{margin:0;max-width:65ch}
+.prose code,.challenge code{font:13px var(--mono);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:0 4px}
+.sql{width:100%;min-height:140px;border:0;border-radius:10px;padding:12px;background:var(--code-bg);color:var(--code-fg);font:13px/1.55 var(--mono);resize:vertical;white-space:pre;overflow:auto;tab-size:2}
+pre.py{margin:0;background:var(--code-bg);color:var(--code-fg);border-radius:10px;padding:12px;font:13px/1.55 var(--mono);overflow-x:auto}
+.err{color:var(--bad);font:13px/1.45 var(--mono);white-space:pre-wrap}
+.meta{font:12px var(--mono);color:var(--muted)}
+.tablewrap{overflow:auto;max-height:340px;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;font:13px/1.3 var(--body);font-variant-numeric:tabular-nums;width:max-content;min-width:100%}
+th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{position:sticky;top:0;background:var(--paper);font:500 11px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+td.num{text-align:right}
+.chartbox{position:relative;height:260px;max-width:100%}
+details{border-top:1px solid var(--line);padding-top:10px}
+summary{cursor:pointer;font-weight:600;color:var(--court);list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"+ ";font-family:var(--mono)}
+details[open] summary::before{content:"− "}
+details>*:not(summary){margin-top:10px}
+.challenge{background:var(--leather-soft);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.challenge p{margin:0}
+.answer{white-space:pre-wrap;margin:0;max-width:65ch}
+.thinking{color:var(--muted);font-style:italic}
+.history{display:flex;flex-direction:column;gap:4px}
+.history button{text-align:left;border:0;background:none;color:var(--court);padding:6px 0;font:14px var(--body);cursor:pointer;border-bottom:1px solid var(--line)}
+.note{font-size:13px;color:var(--muted);margin:0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Film room · basketball-reference data, 1999-00 to 2026-27</div>
+    <h1>Hoops <span>Data</span> Lab</h1>
+    <p class="sub">Ask a basketball question. Claude writes the query, it runs on real player and team seasons right here, and you get a lesson, a chart, the pandas version, and a challenge to try yourself.</p>
+    <div class="status" id="status">Loading data…</div>
+  </header>
+
+  <section class="panel ask" aria-label="Ask a question">
+    <label class="label" for="q">Your question</label>
+    <textarea id="q" placeholder="e.g. Who had the best true shooting on high usage last season?"></textarea>
+    <div class="chips" id="chips"></div>
+    <div class="row">
+      <div class="seg" role="group" aria-label="Level" id="level">
+        <button type="button" data-v="beginner">Beginner</button>
+        <button type="button" data-v="intermediate" aria-pressed="true">Intermediate</button>
+        <button type="button" data-v="advanced">Advanced</button>
+      </div>
+      <span class="grow"></span>
+      <button class="btn" id="go" type="button">Build lesson</button>
+    </div>
+    <p class="note" id="askNote" hidden></p>
+  </section>
+
+  <section class="panel" id="lesson" aria-live="polite"></section>
+
+  <section class="panel" id="histPanel" hidden>
+    <div class="label">Earlier questions</div>
+    <div class="history" id="hist"></div>
+  </section>
+
+  <details class="panel" id="schemaBox">
+    <summary>Tables and columns</summary>
+    <div id="schema" class="prose"></div>
+  </details>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/alasql@4.4.0/dist/alasql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let level = "intermediate", sample = null, chart = null, current = null, dataReady = false;
+
+const SCHEMA = `Tables (SQL engine: AlaSQL, in-browser):
+players: one row per player-season-team, NBA only, seasons 2000-2027.
+  season (int, END year: 2024 = 2023-24; 2027 = 2026-27, IN PROGRESS, only a few games), player, age, team (3-letter code; '2TM','3TM','4TM','5TM' = season total for traded players, who ALSO have one row per team), pos,
+  g, gs, mp (minutes per game), per-game box stats: fg, fga, fg_pct, fg3, fg3a, fg3_pct, fg2, fg2a, fg2_pct, e_fg_pct, ft, fta, ft_pct, orb, drb, trb, ast, stl, blk, tov, pf, pts,
+  advanced: mp_total (season minutes), per, ts_pct, usg_pct, ws, ws_48, bpm, vorp.
+  Shooting pcts are 0-1 decimals; usg_pct is 0-100. Nulls possible (e.g. fg3_pct with 0 attempts).
+teams: one row per team-season, seasons 2000-2027.
+  season, team (full name), abbreviation (matches players.team), playoffs (TRUE/FALSE string), age, w, l, mov, srs, o_rtg, d_rtg, n_rtg, pace, fg3_ar (3PA rate), ts_pct, e_fg_pct, tov_pct, orb_pct, ft_fga.
+Engine rules: standard SELECT/WHERE/GROUP BY/HAVING/ORDER BY/LIMIT, JOIN, subqueries, WITH (CTEs), CASE, ROUND, ABS, SQRT, POWER, COUNT/SUM/AVG/MIN/MAX/STDEV/VAR all work. NO window functions (no OVER, RANK, ROW_NUMBER, LAG) - use self-joins or subqueries. No CORR(): compute Pearson r as (AVG(x*y)-AVG(x)*AVG(y))/(STDEVP-style) i.e. use SQRT(AVG(x*x)-AVG(x)*AVG(x)). Avoid reserved words as aliases (e.g. don't alias as "value", "rank", "count", "year", "key"); use snake_case aliases. String literals in single quotes.
+To avoid double counting traded players in one season, use team NOT LIKE '%TM' only when per-team rows are wanted, or keep the TM row and drop the per-team rows when a player-season total is wanted. Filter small samples (e.g. g >= 20 or mp_total >= 500).`;
+
+const CHIPS = [
+  ["Filtering & sorting","Who were the most efficient high-volume scorers in 2025-26?"],
+  ["Aggregation","How has the average 3-point attempt rate changed by season since 2000?"],
+  ["Normalization","Compare players on a per-36 minute basis instead of per game. Who was most productive per 36 last season among rotation players?"],
+  ["Correlation","How strongly does team pace correlate with offensive rating across seasons?"],
+  ["Z-scores","Build 9-cat fantasy z-scores for 2025-26 and rank the top players."],
+  ["Era adjustment","Who are the best scorers since 2000 relative to their season's league average?"],
+  ["Joins","Do teams with older rosters win more? Join players and teams."],
+  ["Aging curves","At what age does the average player's BPM peak?"],
+  ["Outliers","Which teams most outperformed their point differential (wins vs SRS)?"],
+];
+
+const EXAMPLE = {
+  question:"How has 3-point volume changed since 2000?",
+  title:"The three-point takeover", skill:"Aggregation · GROUP BY",
+  concept:"Group rows by a category, then summarize each group with an aggregate like AVG. Here each team-season is a row, so averaging fg3_ar by season gives one league-wide number per year. Using the team table avoids weighting by how many bench players a season had.",
+  sql:`SELECT season,\n       ROUND(AVG(fg3_ar), 3) AS three_pa_rate,\n       ROUND(AVG(pace), 1)   AS pace\nFROM teams\nWHERE season < 2027\nGROUP BY season\nORDER BY season`,
+  pandas:`(teams[teams.season < 2027]\n   .groupby("season", as_index=False)\n   .agg(three_pa_rate=("fg3_ar", "mean"),\n        pace=("pace", "mean"))\n   .round({"three_pa_rate": 3, "pace": 1}))`,
+  chart:{type:"line", x:"season", y:["three_pa_rate"]},
+  challenge:"Change the query to also show league-average true shooting (ts_pct) by season. Did efficiency rise along with volume?"
+};
+
+/* ---------- data ---------- */
+function parseCSV(txt){
+  const lines = txt.replace(/\r/g,"").trim().split("\n");
+  const head = lines.shift().split(",");
+  const out = new Array(lines.length);
+  for (let i=0;i<lines.length;i++){
+    const v = lines[i].split(","), o = {};
+    for (let j=0;j<head.length;j++){
+      const x = v[j];
+      o[head[j]] = (x===undefined||x==="") ? null : (x!=="" && !isNaN(x) ? +x : x);
+    }
+    out[i]=o;
+  }
+  return out;
+}
+async function loadData(){
+  try{
+    const [p,t] = await Promise.all(["players.csv","teams.csv"].map(f=>fetch("data/"+f).then(r=>{if(!r.ok) throw new Error(f+" "+r.status); return r.text();})));
+    alasql("CREATE TABLE players"); alasql.tables.players.data = parseCSV(p);
+    alasql("CREATE TABLE teams");   alasql.tables.teams.data   = parseCSV(t);
+    dataReady = true;
+    $("#status").innerHTML = `<b>${alasql.tables.players.data.length.toLocaleString()}</b> player-seasons · <b>${alasql.tables.teams.data.length}</b> team-seasons loaded`;
+    if (current) runLesson();
+  }catch(e){ $("#status").textContent = "Couldn't load the data files: " + e.message; }
+}
+
+/* ---------- rendering ---------- */
+function isNum(v){ return typeof v==="number" && isFinite(v); }
+function fmt(v){ if(v===null||v===undefined) return "—"; if(isNum(v)) return Number.isInteger(v)?String(v):(Math.abs(v)<1?v.toFixed(3):v.toFixed(2).replace(/\.?0+$/,"")); return String(v); }
+
+function renderLesson(L){
+  current = L;
+  $("#lesson").innerHTML = `
+    <div class="lesson-head">
+      <span class="skill">${esc(L.skill||"Lesson")}</span>
+      <h2>${esc(L.title||L.question)}</h2>
+      <div class="meta">Q: ${esc(L.question)}</div>
+    </div>
+    <p class="prose">${esc(L.concept)}</p>
+    <div class="label">SQL · edit and run it</div>
+    <textarea class="sql" id="sql" spellcheck="false" autocapitalize="off" autocorrect="off">${esc(L.sql)}</textarea>
+    <div class="row"><button class="btn small" id="run" type="button">Run query</button><span class="meta" id="runMeta"></span></div>
+    <div class="err" id="err" hidden></div>
+    <div class="chartbox" id="chartbox" hidden><canvas id="cv"></canvas></div>
+    <div class="tablewrap" id="tw" hidden></div>
+    <div class="row"><button class="btn ghost small" id="explain" type="button">What does this tell me?</button></div>
+    <p class="answer" id="explainOut" hidden></p>
+    <details><summary>Same thing in pandas</summary><pre class="py">${esc(L.pandas||"")}</pre>
+      <p class="note">Shown for learning. The SQL above is what actually ran, so recreate this in a notebook to check yourself.</p></details>
+    <div class="challenge">
+      <div class="label">Your turn</div>
+      <p>${esc(L.challenge||"")}</p>
+      <div class="row"><button class="btn small" id="check" type="button">Check my query</button><button class="btn ghost small" id="hint" type="button">Hint</button></div>
+      <p class="answer" id="checkOut" hidden></p>
+    </div>`;
+  $("#run").onclick = runLesson;
+  $("#explain").onclick = explainResults;
+  $("#check").onclick = () => coach("check");
+  $("#hint").onclick = () => coach("hint");
+  toggleClaudeButtons();
+  if (dataReady) runLesson();
+}
+
+function runLesson(){
+  const sql = $("#sql").value.trim(), err=$("#err");
+  err.hidden = true;
+  if(!dataReady){ $("#runMeta").textContent="Waiting for data…"; return; }
+  const t0 = performance.now();
+  let rows;
+  try{ rows = alasql(sql); if(!Array.isArray(rows)) rows=[]; }
+  catch(e){ err.textContent = "Query error: " + (e.message||e).split("\n").slice(0,3).join("\n"); err.hidden=false; $("#runMeta").textContent=""; current.rows=null; return {error:e.message}; }
+  current.rows = rows; current.ranSql = sql;
+  $("#runMeta").textContent = `${rows.length.toLocaleString()} rows · ${Math.round(performance.now()-t0)} ms`;
+  renderTable(rows); renderChart(rows, current.chart);
+  return {rows};
+}
+
+function renderTable(rows){
+  const tw=$("#tw");
+  if(!rows.length){ tw.hidden=false; tw.innerHTML='<p class="note" style="padding:12px">No rows matched.</p>'; return; }
+  const cols = Object.keys(rows[0]), show = rows.slice(0,100);
+  tw.innerHTML = `<table><thead><tr>${cols.map(c=>`<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>${
+    show.map(r=>`<tr>${cols.map(c=>`<td class="${isNum(r[c])?"num":""}">${esc(fmt(r[c]))}</td>`).join("")}</tr>`).join("")}</tbody></table>${rows.length>100?`<p class="note" style="padding:8px 10px">Showing 100 of ${rows.length}.</p>`:""}`;
+  tw.hidden=false;
+}
+
+function cssVar(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+function renderChart(rows, spec){
+  const box=$("#chartbox");
+  if(chart){ chart.destroy(); chart=null; }
+  if(!spec || !spec.type || spec.type==="none" || !rows.length || typeof Chart==="undefined"){ box.hidden=true; return; }
+  const cols = Object.keys(rows[0]);
+  const ys = (Array.isArray(spec.y)?spec.y:[spec.y]).filter(y=>cols.includes(y));
+  if(!cols.includes(spec.x) || !ys.length){ box.hidden=true; return; }
+  const ink=cssVar("--ink"), muted=cssVar("--muted"), line=cssVar("--line");
+  const palette=[cssVar("--court"),cssVar("--leather"),cssVar("--good"),cssVar("--muted")];
+  const data = rows.slice(0, spec.type==="scatter"?2000:60);
+  let cfg;
+  if(spec.type==="scatter"){
+    cfg={type:"scatter",data:{datasets:[{label:ys[0],data:data.map(r=>({x:r[spec.x],y:r[ys[0]],l:spec.label?r[spec.label]:""})).filter(p=>isNum(p.x)&&isNum(p.y)),backgroundColor:palette[0]+"AA",pointRadius:3.5}]},
+      options:{plugins:{tooltip:{callbacks:{label:c=>`${c.raw.l?c.raw.l+": ":""}${fmt(c.raw.x)}, ${fmt(c.raw.y)}`}}}}};
+  }else{
+    cfg={type:spec.type==="bar"?"bar":"line",data:{labels:data.map(r=>fmt(r[spec.x])),datasets:ys.map((y,i)=>({label:y,data:data.map(r=>r[y]),borderColor:palette[i%4],backgroundColor:spec.type==="bar"?palette[i%4]:palette[i%4]+"22",fill:spec.type!=="bar"&&ys.length===1,tension:.25,pointRadius:spec.type==="bar"?0:2,yAxisID:i===0?"y":(ys.length===2?"y1":"y")}))}};
+    if(spec.type==="bar" && data.length>8 && typeof data[0][spec.x]==="string") cfg.options={indexAxis:"y"};
+  }
+  cfg.options = Object.assign({responsive:true,maintainAspectRatio:false,animation:false,
+    plugins:{legend:{display:ys.length>1,labels:{color:ink,boxWidth:12}}},
+    scales:{x:{ticks:{color:muted,maxRotation:0,autoSkip:true},grid:{color:line},title:{display:spec.type==="scatter",text:spec.x,color:muted}},
+            y:{ticks:{color:muted},grid:{color:line},title:{display:true,text:ys[0],color:muted}}}}, cfg.options||{});
+  if(cfg.options.plugins.tooltip===undefined && cfg.type==="scatter") {}
+  if(ys.length===2 && cfg.type==="line") cfg.options.scales.y1={position:"right",ticks:{color:muted},grid:{display:false},title:{display:true,text:ys[1],color:muted}};
+  if(cfg.options.indexAxis==="y"){ const s=cfg.options.scales; [s.x,s.y]=[s.y,s.x]; }
+  box.hidden=false;
+  chart = new Chart($("#cv"), cfg);
+}
+
+/* ---------- Claude ---------- */
+function toggleClaudeButtons(){
+  const off = !sample;
+  ["#explain","#check","#hint"].forEach(s=>{ const b=$(s); if(b) b.hidden=off; });
+}
+function errCopy(e){
+  switch(e && e.code){
+    case "not_granted": case "sampling_disabled": case "not_declared": case "capability_disabled": case "capability_removed":
+      sample=null; toggleClaudeButtons(); $("#go").disabled=true; return "Claude isn't available on this page right now. You can still edit and run the SQL yourself.";
+    case "rate_limited": return "Too many requests for now. Wait a minute and try again.";
+    case "session_expired": return "Sign in to Claude again, then retry.";
+    case "invalid_json": return "Claude's answer came back in a shape the lab couldn't read. Try again, or rephrase the question.";
+    case "refused": return "Claude declined that one. Try rephrasing.";
+    case "cancelled": return "";
+    default: return "Something went wrong reaching Claude. Try again.";
+  }
+}
+
+const LEVEL_NOTE = {
+  beginner:"Learner is new to SQL/pandas: keep queries short (one table, simple WHERE/GROUP BY), explain every clause plainly.",
+  intermediate:"Learner knows basic SQL and pandas: use joins, subqueries or CTEs when they help, and explain the analytical idea more than syntax.",
+  advanced:"Learner is a data science grad aiming at NBA front-office work: use multi-step CTEs, normalization, z-scores, correlation, and discuss statistical caveats (sample size, selection bias, era effects)."
+};
+
+async function buildLesson(){
+  const q = $("#q").value.trim(); const note=$("#askNote");
+  if(!q){ $("#q").focus(); return; }
+  if(!sample){ note.textContent="Claude isn't available here, so try the example lesson or edit its SQL."; note.hidden=false; return; }
+  note.hidden=true; $("#go").disabled=true; $("#go").textContent="Thinking…";
+  $("#lesson").innerHTML = `<p class="thinking">Writing a lesson for “${esc(q)}”… this usually takes 10 to 40 seconds.</p>`;
+  const prompt = `You are a basketball analytics coach teaching data science through real NBA data. The learner asked:
+"${q}"
+${LEVEL_NOTE[level]}
+
+${SCHEMA}
+
+Reply with ONLY a JSON object:
+{"title": short punchy lesson title (max 6 words),
+ "skill": the data science skill taught, e.g. "Normalization · per-36",
+ "concept": 2-4 sentences teaching the core idea and why the query is built this way (mention any caveats like small samples or the in-progress 2027 season),
+ "sql": one runnable AlaSQL query following the engine rules exactly, readable with line breaks, returning at most ~60 rows unless a scatter needs more,
+ "pandas": the equivalent pandas code assuming DataFrames named players and teams,
+ "chart": {"type": "line"|"bar"|"scatter"|"none", "x": result column, "y": [1-2 result columns], "label": optional result column for scatter tooltips},
+ "challenge": one concrete follow-up task the learner should do by editing the SQL themselves (don't give the answer)}
+"Last season" means 2026 (the 2025-26 season) since 2027 is barely started.`;
+  try{
+    let L = await sample.json(prompt, {modelTier:"default"});
+    if(!L || typeof L.sql!=="string") throw {code:"invalid_json"};
+    L.question=q;
+    renderLesson(L);
+    const res = runLesson();
+    if(res && res.error){
+      $("#runMeta").textContent="Query failed, asking Claude to fix it once…";
+      const fix = await sample.json(`This AlaSQL query failed.\n\nQuery:\n${L.sql}\n\nError: ${res.error}\n\n${SCHEMA}\n\nReply with ONLY JSON {"sql": corrected query, "chart": {"type","x","y","label"} matching its columns}.`, {modelTier:"default", cache:false});
+      if(fix && fix.sql){ L.sql=fix.sql; if(fix.chart) L.chart=fix.chart; renderLesson(L); }
+    }
+    saveHistory(L);
+  }catch(e){
+    const m = errCopy(e);
+    $("#lesson").innerHTML = `<p class="err">${esc(m)}</p>`;
+    if(current && current.question!==q) {/* keep error visible */}
+  }finally{ $("#go").disabled=!sample; $("#go").textContent="Build lesson"; }
+}
+
+function rowsPreview(rows, n=40){
+  if(!rows||!rows.length) return "(no rows)";
+  const cols=Object.keys(rows[0]);
+  return [cols.join(" | "), ...rows.slice(0,n).map(r=>cols.map(c=>fmt(r[c])).join(" | "))].join("\n") + (rows.length>n?`\n… ${rows.length-n} more rows`:"");
+}
+
+async function explainResults(){
+  const out=$("#explainOut"), b=$("#explain");
+  if(!current.rows){ out.hidden=false; out.textContent="Run a query that works first."; return; }
+  b.disabled=true; out.hidden=false; out.innerHTML='<span class="thinking">Reading the results…</span>';
+  try{
+    await sample(`You're an NBA analytics coach. The learner asked "${current.question}" and ran this query:\n${current.ranSql}\n\nResults:\n${rowsPreview(current.rows)}\n\nIn 4-6 short sentences of plain prose: what the numbers actually show, one thing that surprised you or deserves skepticism (sample size, era, selection), and how a front office might use this. No markdown, no em dashes.`,
+      {onText:({text})=>{out.textContent=text;}});
+  }catch(e){ out.textContent = e.text || errCopy(e); }
+  finally{ b.disabled=false; }
+}
+
+async function coach(mode){
+  const out=$("#checkOut");
+  const sql=$("#sql").value.trim();
+  out.hidden=false; out.innerHTML='<span class="thinking">'+(mode==="hint"?"Thinking of a hint…":"Checking your query…")+'</span>';
+  let prompt;
+  if(mode==="hint"){
+    prompt=`An NBA data science learner is working on this challenge: "${current.challenge}"\nTheir current SQL:\n${sql}\n\n${SCHEMA}\n\nGive ONE short hint (1-2 sentences) that nudges them toward the next step without writing the query. Plain text, no em dashes.`;
+  }else{
+    const r = runLesson();
+    const result = r && r.error ? "ERROR: "+r.error : rowsPreview(current.rows, 25);
+    prompt=`An NBA data science learner attempted this challenge: "${current.challenge}"\nTheir SQL:\n${sql}\n\nIt produced:\n${result}\n\n${SCHEMA}\n\nGrade it like a supportive but honest coach in 3-5 sentences: does it answer the challenge correctly, any logic bugs (double counting traded players, small samples, wrong filters), and one way to make it better. If it is wrong, say what is wrong but do not paste a full corrected query. Plain text, no em dashes.`;
+  }
+  try{ await sample(prompt,{cache:false,onText:({text})=>{out.textContent=text;}}); }
+  catch(e){ out.textContent = e.text || errCopy(e); }
+}
+
+/* ---------- history (this browser only) ---------- */
+function loadHistory(){ try{ return JSON.parse(localStorage.getItem("hdl-history")||"[]"); }catch{ return []; } }
+function saveHistory(L){
+  const h = loadHistory().filter(x=>x.question!==L.question);
+  h.unshift({question:L.question,title:L.title,skill:L.skill,concept:L.concept,sql:L.sql,pandas:L.pandas,chart:L.chart,challenge:L.challenge});
+  try{ localStorage.setItem("hdl-history", JSON.stringify(h.slice(0,12))); }catch{}
+  drawHistory();
+}
+function drawHistory(){
+  const h=loadHistory(); $("#histPanel").hidden=!h.length;
+  $("#hist").innerHTML="";
+  h.forEach(L=>{ const b=document.createElement("button"); b.type="button"; b.textContent=L.title?`${L.title} · ${L.question}`:L.question; b.onclick=()=>{renderLesson(L); window.scrollTo({top:$("#lesson").offsetTop-12,behavior:"smooth"});}; $("#hist").appendChild(b); });
+}
+
+/* ---------- boot ---------- */
+CHIPS.forEach(([label,q])=>{ const c=document.createElement("button"); c.type="button"; c.className="chip"; c.textContent=label; c.onclick=()=>{$("#q").value=q; $("#q").focus();}; $("#chips").appendChild(c); });
+$("#level").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; level=b.dataset.v; $("#level").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b)); });
+$("#go").onclick=buildLesson;
+$("#q").addEventListener("keydown",e=>{ if(e.key==="Enter"&&(e.metaKey||e.ctrlKey)) buildLesson(); });
+$("#schema").innerHTML = "<pre class='py' style='white-space:pre-wrap'>"+esc(SCHEMA.split("Engine rules")[0])+"</pre>";
+renderLesson(EXAMPLE); drawHistory(); loadData();
+(async()=>{ try{ sample = window.claude ? await window.claude.use("sample") : null; }catch{ sample=null; }
+  toggleClaudeButtons();
+  if(!sample){ $("#go").disabled=true; const n=$("#askNote"); n.textContent="Claude isn't connected in this view. The example lesson and SQL editor still work."; n.hidden=false; }
+})();
+</script>
+
+</body>
+</html>
